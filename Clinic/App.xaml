@@ -4,8 +4,91 @@
              xmlns:local="clr-namespace:Clinic"
              StartupUri="Windows/LoginWindow.xaml">
     <Application.Resources>
+        <!-- Config -->
+        
+        <SolidColorBrush x:Key="Gray2" Color="#1A1230" />
+        <SolidColorBrush x:Key="Gray4" Color="#C1C2C7" />
+        <SolidColorBrush x:Key="White" Color="#FFFFFF" />
+
+        <Style TargetType="TextBlock" x:Key="Heading2">
+            <Setter Property="FontFamily" Value="Alter Aves" />
+            <Setter Property="FontSize" Value="40" />
+            <Setter Property="FontWeight" Value="Bold" />
+        </Style>
+
+        <Style TargetType="TextBlock" x:Key="Heading3">
+            <Setter Property="FontSize" Value="30" />
+            <Setter Property="FontWeight" Value="Bold" />
+        </Style>
+
+        <!-- Base -->
+
+        <Style TargetType="Window" x:Key="Window">
+            <Setter Property="FontFamily" Value="GT Walsheim LC" />
+            <Setter Property="FontSize" Value="14" />
+        </Style>
+
         <Style TargetType="Label">
             <Setter Property="Padding" Value="0" />
+        </Style>
+
+        <!-- TextBox -->
+
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value="{StaticResource White}" />
+            <Setter Property="BorderBrush" Value="{StaticResource Gray4}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border Padding="14,12" CornerRadius="20" BorderThickness="2" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}">
+                            <ScrollViewer x:Name="PART_ContentHost" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsFocused" Value="True">
+                    <Setter Property="BorderBrush" Value="{StaticResource Gray2}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Button -->
+
+        <Style TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Padding="14,12" CornerRadius="20" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="2" Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="Button" x:Key="PrimaryButton" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Background" Value="{StaticResource Gray2}" />
+            <Setter Property="BorderBrush" Value="{StaticResource Gray2}" />
+            <Setter Property="Foreground" Value="{StaticResource White}" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{StaticResource White}" />
+                    <Setter Property="Foreground" Value="{StaticResource Gray2}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="Button" x:Key="SecondaryButton" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Background" Value="{StaticResource White}" />
+            <Setter Property="BorderBrush" Value="{StaticResource Gray2}" />
+            <Setter Property="Foreground" Value="{StaticResource Gray2}" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{StaticResource Gray2}" />
+                    <Setter Property="Foreground" Value="{StaticResource White}" />
+                </Trigger>
+            </Style.Triggers>
         </Style>
     </Application.Resources>
 </Application>
