@@ -4,24 +4,14 @@
              xmlns:local="clr-namespace:Clinic"
              StartupUri="Windows/MainWindow.xaml">
     <Application.Resources>
-        <!-- Config -->
+        <!-- Colors -->
         
         <SolidColorBrush x:Key="Gray2" Color="#1A1230" />
         <SolidColorBrush x:Key="Gray4" Color="#C1C2C7" />
+        <SolidColorBrush x:Key="Gray6" Color="#E9EAEE" />
         <SolidColorBrush x:Key="White" Color="#FFFFFF" />
 
-        <Style TargetType="TextBlock" x:Key="Heading2">
-            <Setter Property="FontFamily" Value="Alter Aves" />
-            <Setter Property="FontSize" Value="40" />
-            <Setter Property="FontWeight" Value="Bold" />
-        </Style>
-
-        <Style TargetType="TextBlock" x:Key="Heading3">
-            <Setter Property="FontSize" Value="30" />
-            <Setter Property="FontWeight" Value="Bold" />
-        </Style>
-
-        <!-- Base -->
+        <!-- Base controls -->
 
         <Style TargetType="UserControl" x:Key="ControlDesignStyle">
             <Setter Property="Background" Value="{StaticResource White}" />
@@ -32,10 +22,29 @@
         <Style TargetType="Window" x:Key="Window">
             <Setter Property="FontFamily" Value="GT Walsheim LC" />
             <Setter Property="FontSize" Value="14" />
+            <Setter Property="Padding" Value="30" />
+            <Setter Property="Background" Value="{StaticResource Gray6}" />
         </Style>
 
         <Style TargetType="Label">
             <Setter Property="Padding" Value="0" />
+        </Style>
+
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource Gray2}" />
+        </Style>
+        
+        <!-- TextBlock typography -->
+
+        <Style TargetType="TextBlock" x:Key="Heading1" BasedOn="{StaticResource {x:Type TextBlock}}">
+            <Setter Property="FontFamily" Value="Alter Aves" />
+            <Setter Property="FontSize" Value="40" />
+            <Setter Property="FontWeight" Value="Bold" />
+        </Style>
+
+        <Style TargetType="TextBlock" x:Key="Heading2" BasedOn="{StaticResource {x:Type TextBlock}}">
+            <Setter Property="FontSize" Value="30" />
+            <Setter Property="FontWeight" Value="Bold" />
         </Style>
 
         <!-- TextBox -->
@@ -95,6 +104,49 @@
                     <Setter Property="Foreground" Value="{StaticResource White}" />
                 </Trigger>
             </Style.Triggers>
+        </Style>
+        
+        <!-- Tabs -->
+
+        <Style TargetType="TabItem">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <TextBlock Name="TabItemHeader"  Margin="0,0,0,16">
+                    <ContentPresenter ContentSource="Header" x:Name="ContentSite" RecognizesAccessKey="True" />
+                        </TextBlock>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="TabItemHeader" Property="TextDecorations" Value="Underline"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="TabControl">
+            <Setter Property="Margin" Value="16" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabControl">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="1*" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="180" />
+                                <ColumnDefinition Width="16" />
+                                <ColumnDefinition Width="1*" />
+                            </Grid.ColumnDefinitions>
+                            <Border Grid.Row="0" Grid.Column="0" Background="{StaticResource White}" Padding="16" CornerRadius="16">
+                                <ItemsPresenter />
+                            </Border>
+                            <ContentPresenter Grid.Row="0" Grid.Column="2" ContentSource="SelectedContent" />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
     </Application.Resources>
 </Application>
