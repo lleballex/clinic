@@ -14,7 +14,7 @@
                 <patientControls:Patients />
             </TabItem>
             <TabItem Header="Врачи">
-                <doctorControls:Doctors />
+                <doctorControls:Doctors AllowAdding="True" />
             </TabItem>
         </TabControl>
     </Grid>

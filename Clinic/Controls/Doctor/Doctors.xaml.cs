@@ -15,11 +15,22 @@ using System.Windows.Shapes;
 
 namespace Clinic.Controls.Doctor
 {
-    /// <summary>
-    /// Логика взаимодействия для Doctors.xaml
-    /// </summary>
     public partial class Doctors : UserControl
     {
+        // TODO: make it right
+        private bool _allowAdding;
+
+        // TODO: make it right
+        public bool AllowAdding
+        {
+            get { return _allowAdding; }
+            set
+            {
+                AddDoctorBtn.Visibility = value ? Visibility.Visible : Visibility.Hidden;
+                _allowAdding = value;
+            }
+        }
+
         public Doctors()
         {
             InitializeComponent();

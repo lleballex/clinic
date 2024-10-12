@@ -22,7 +22,8 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="0" Style="{StaticResource Heading1}">Врачи</TextBlock>
-            <Button Grid.Column="2" Style="{StaticResource PrimaryButton}" VerticalAlignment="Center">Добавить врача</Button>
+            <!-- TODO: use binding for visibility -->
+            <Button Grid.Column="2" Name="AddDoctorBtn" Visibility="Hidden" Style="{StaticResource PrimaryButton}" VerticalAlignment="Center">Добавить врача</Button>
         </Grid>
 
         <Grid Grid.Row="2">
@@ -32,7 +33,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <TextBox Grid.Column="0" />
-            <!-- TextBox placeholder -->
+            <!-- TODO: TextBox placeholder -->
             <Button Grid.Column="2" Style="{StaticResource SecondaryButton}">Найти</Button>
         </Grid>
 
