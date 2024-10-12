@@ -1,11 +1,10 @@
 ﻿<Application x:Class="Clinic.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:Clinic"
-             StartupUri="Windows/MainWindow.xaml">
+             xmlns:local="clr-namespace:Clinic">
     <Application.Resources>
         <!-- Colors -->
-        
+
         <SolidColorBrush x:Key="Gray2" Color="#1A1230" />
         <SolidColorBrush x:Key="Gray4" Color="#C1C2C7" />
         <SolidColorBrush x:Key="Gray6" Color="#E9EAEE" />
@@ -24,6 +23,9 @@
             <Setter Property="FontSize" Value="14" />
             <Setter Property="Padding" Value="30" />
             <Setter Property="Background" Value="{StaticResource Gray6}" />
+            <Setter Property="Width" Value="800" />
+            <Setter Property="Height" Value="600" />
+            <Setter Property="Title" Value="Поликлиника №1" />
         </Style>
 
         <Style TargetType="Label">
@@ -31,9 +33,10 @@
         </Style>
 
         <Style TargetType="TextBlock">
+            <!-- TODO: button foreground can't override this value -->
             <Setter Property="Foreground" Value="{StaticResource Gray2}" />
         </Style>
-        
+
         <!-- TextBlock typography -->
 
         <Style TargetType="TextBlock" x:Key="Heading1" BasedOn="{StaticResource {x:Type TextBlock}}">
@@ -105,7 +108,7 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-        
+
         <!-- Tabs -->
 
         <Style TargetType="TabItem">

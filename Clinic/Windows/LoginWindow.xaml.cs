@@ -10,14 +10,16 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Clinic.Pages
+namespace Clinic.Windows
 {
-    public partial class LoginPage : UserControl
+    /// <summary>
+    /// Логика взаимодействия для LoginWindow.xaml
+    /// </summary>
+    public partial class LoginWindow : Window
     {
-        public LoginPage()
+        public LoginWindow()
         {
             InitializeComponent();
         }
