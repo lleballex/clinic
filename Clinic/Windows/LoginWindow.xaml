@@ -12,7 +12,7 @@
         </Style>
     </Window.Resources>
 
-    <Border Background="{StaticResource White}" MaxWidth="320" Width="Auto" VerticalAlignment="Center" Padding="16" CornerRadius="16">
+    <Border Background="{StaticResource White}" MaxWidth="400" Width="Auto" VerticalAlignment="Center" Padding="16" CornerRadius="16">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*" />
@@ -27,7 +27,7 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource Heading2}">Авторизация</TextBlock>
+            <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource Heading1}">Авторизация</TextBlock>
             <StackPanel Grid.Row="2" Grid.Column="0">
                 <Label Style="{StaticResource FieldLabel}">Email</Label>
                 <TextBox />

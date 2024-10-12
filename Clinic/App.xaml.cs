@@ -10,6 +10,7 @@ namespace Clinic
             base.OnStartup(e);
 
             (new LoginWindow()).Show();
+            (new AdminWindow()).Show();
         }
     }
 }

@@ -1,0 +1,19 @@
+﻿<Window x:Class="Clinic.Windows.AdminWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Clinic.Windows"
+        mc:Ignorable="d"
+        Style="{StaticResource Window}">
+    <Grid>
+        <TabControl>
+            <TabItem Header="Пациенты">
+                <TextBlock Style="{StaticResource Heading1}">Пациенты</TextBlock>
+            </TabItem>
+            <TabItem Header="Врачи">
+                <TextBlock Style="{StaticResource Heading1}">Врачи</TextBlock>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>
