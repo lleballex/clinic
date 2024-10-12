@@ -9,8 +9,51 @@
     <Grid>
         <TabControl>
             <TabItem Header="Пациенты">
-                <TextBlock Style="{StaticResource Heading1}">Пациенты</TextBlock>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="16" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="16" />
+                        <RowDefinition Height="1*" />
+                    </Grid.RowDefinitions>
+                    
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Style="{StaticResource Heading1}">Пациенты</TextBlock>
+                        <Button Grid.Column="2" Style="{StaticResource PrimaryButton}" VerticalAlignment="Center">Добавить пациента</Button>
+                    </Grid>
+                    
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*" MaxWidth="250" />
+                            <ColumnDefinition Width="8" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <!-- TextBox placeholder -->
+                        <TextBox Grid.Column="0" />
+                        <Button Grid.Column="2" Style="{StaticResource SecondaryButton}">Найти</Button>
+                    </Grid>
+
+                    <DataGrid Grid.Row="4">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="ID" />
+                            <DataGridTextColumn Header="Фамилия" />
+                            <DataGridTextColumn Header="Имя" />
+                            <DataGridTextColumn Header="Отчество" />
+                            <DataGridTextColumn Header="Дата рождения" />
+                            <DataGridComboBoxColumn Header="Пол" />
+                            <DataGridTextColumn Header="Номер полиса" />
+                            <DataGridTextColumn Header="Номер телефона" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
             </TabItem>
+            
             <TabItem Header="Врачи">
                 <TextBlock Style="{StaticResource Heading1}">Врачи</TextBlock>
             </TabItem>
