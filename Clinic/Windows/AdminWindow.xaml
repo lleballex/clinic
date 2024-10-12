@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Clinic.Windows"
         xmlns:patientControls="clr-namespace:Clinic.Controls.Patient"
+        xmlns:doctorControls="clr-namespace:Clinic.Controls.Doctor"
         mc:Ignorable="d"
         Style="{StaticResource Window}">
     <Grid>
@@ -12,9 +13,8 @@
             <TabItem Header="Пациенты">
                 <patientControls:Patients />
             </TabItem>
-            
             <TabItem Header="Врачи">
-                <TextBlock Style="{StaticResource Heading1}">Врачи</TextBlock>
+                <doctorControls:Doctors />
             </TabItem>
         </TabControl>
     </Grid>
