@@ -6,49 +6,45 @@
              xmlns:local="clr-namespace:Clinic.Controls.Doctor"
              mc:Ignorable="d" 
              d:Style="{StaticResource ControlDesignStyle}">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="16" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="16" />
-            <RowDefinition Height="1*" />
-        </Grid.RowDefinitions>
+    <ScrollViewer Padding="0,0,16,0">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="16" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="16" />
+                <RowDefinition Height="1*" />
+            </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0" Style="{StaticResource Heading1}">Врачи</TextBlock>
-            <!-- TODO: use binding for visibility -->
-            <Button Grid.Column="2" Name="AddDoctorBtn" Visibility="Hidden" Style="{StaticResource PrimaryButton}" VerticalAlignment="Center">Добавить врача</Button>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Style="{StaticResource Heading1}">Врачи</TextBlock>
+                <!-- TODO: use binding for visibility -->
+                <Button Grid.Column="2" Name="AddDoctorBtn" Visibility="Hidden" Style="{StaticResource PrimaryButton}" VerticalAlignment="Center">Добавить врача</Button>
+            </Grid>
+
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" MaxWidth="250" />
+                    <ColumnDefinition Width="8" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBox Grid.Column="0" />
+                <!-- TODO: TextBox placeholder -->
+                <Button Grid.Column="2" Style="{StaticResource SecondaryButton}">Найти</Button>
+            </Grid>
+
+            <StackPanel Grid.Row="4" >
+                <local:DoctorCard Grid.Row="4" Margin="0,0,0,16"/>
+                <local:DoctorCard Grid.Row="4" Margin="0,0,0,16" />
+                <local:DoctorCard Grid.Row="4" Margin="0,0,0,16" />
+                <local:DoctorCard Grid.Row="4" Margin="0,0,0,16" />
+                <local:DoctorCard Grid.Row="4" Margin="0,0,0,16" />
+            </StackPanel>
         </Grid>
-
-        <Grid Grid.Row="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*" MaxWidth="250" />
-                <ColumnDefinition Width="8" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <TextBox Grid.Column="0" />
-            <!-- TODO: TextBox placeholder -->
-            <Button Grid.Column="2" Style="{StaticResource SecondaryButton}">Найти</Button>
-        </Grid>
-
-        <DataGrid Grid.Row="4">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" />
-                <DataGridTextColumn Header="Фамилия" />
-                <DataGridTextColumn Header="Имя" />
-                <DataGridTextColumn Header="Отчество" />
-                <DataGridTextColumn Header="Дата рождения" />
-                <DataGridComboBoxColumn Header="Пол" />
-                <DataGridTextColumn Header="Длительность приема" />
-                <DataGridComboBoxColumn Header="Специальность" />
-                <DataGridTextColumn Header="Участки" />
-            </DataGrid.Columns>
-        </DataGrid>
-    </Grid>
+    </ScrollViewer>
 </UserControl>

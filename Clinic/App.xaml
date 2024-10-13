@@ -24,8 +24,8 @@
             <Setter Property="FontSize" Value="14" />
             <Setter Property="Padding" Value="30" />
             <Setter Property="Background" Value="{StaticResource Gray6}" />
-            <Setter Property="Width" Value="800" />
-            <Setter Property="Height" Value="600" />
+            <Setter Property="Width" Value="900" />
+            <Setter Property="Height" Value="700" />
             <Setter Property="Title" Value="Поликлиника №1" />
         </Style>
 
@@ -48,6 +48,20 @@
         <Style TargetType="TextBlock" x:Key="Heading2" BasedOn="{StaticResource {x:Type TextBlock}}">
             <Setter Property="FontSize" Value="30" />
             <Setter Property="FontWeight" Value="Bold" />
+        </Style>
+
+        <!--<Style TargetType="TextBlock" x:Key="Heading3" BasedOn="{StaticResource {x:Type TextBlock}}">
+            <Setter Property="FontSize" Value="24" />
+            <Setter Property="FontWeight" Value="Bold" />
+        </Style>-->
+
+        <Style TargetType="TextBlock" x:Key="Heading4" BasedOn="{StaticResource {x:Type TextBlock}}">
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="FontWeight" Value="Bold" />
+        </Style>
+
+        <Style TargetType="TextBlock" x:Key="Paragraph3" BasedOn="{StaticResource {x:Type TextBlock}}">
+            <Setter Property="FontSize" Value="12" />
         </Style>
 
         <!-- TextBox -->
