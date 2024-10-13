@@ -6,44 +6,44 @@
              xmlns:local="clr-namespace:Clinic.Controls.Patient"
              mc:Ignorable="d" 
              d:Style="{StaticResource ControlDesignStyle}">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="16" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="16" />
-            <RowDefinition Height="1*" />
-        </Grid.RowDefinitions>
+    <ScrollViewer Padding="0,0,16,0">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="16" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="16" />
+                <RowDefinition Height="1*" />
+            </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0" Style="{StaticResource Heading1}">Пациенты</TextBlock>
-            <Button Grid.Column="2" Style="{StaticResource PrimaryButton}" VerticalAlignment="Center">Добавить пациента</Button>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Style="{StaticResource Heading1}">Пациенты</TextBlock>
+                <Button Grid.Column="2" Style="{StaticResource PrimaryButton}" VerticalAlignment="Center">Добавить пациента</Button>
+            </Grid>
+
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" MaxWidth="250" />
+                    <ColumnDefinition Width="8" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBox Grid.Column="0" />
+                <!-- TextBox placeholder -->
+                <Button Grid.Column="2" Style="{StaticResource SecondaryButton}">Найти</Button>
+            </Grid>
+
+            <StackPanel Grid.Row="4">
+                <local:PatientCard Margin="0,0,0,16" />
+                <local:PatientCard Margin="0,0,0,16" />
+                <local:PatientCard Margin="0,0,0,16" />
+                <local:PatientCard Margin="0,0,0,16" />
+                <local:PatientCard Margin="0,0,0,16" />
+            </StackPanel>
         </Grid>
-
-        <Grid Grid.Row="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*" MaxWidth="250" />
-                <ColumnDefinition Width="8" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <TextBox Grid.Column="0" /><!-- TextBox placeholder -->
-            <Button Grid.Column="2" Style="{StaticResource SecondaryButton}">Найти</Button>
-        </Grid>
-
-        <DataGrid Grid.Row="4">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="ФИО" />
-                <DataGridTextColumn Header="Дата рождения" />
-                <DataGridTextColumn Header="Пол" />
-                <DataGridTextColumn Header="Номер полиса" />
-                <DataGridTextColumn Header="Номер телефона" />
-                <DataGridTextColumn Header="Адрес" />
-            </DataGrid.Columns>
-        </DataGrid>
-    </Grid>
+    </ScrollViewer>
 </UserControl>
