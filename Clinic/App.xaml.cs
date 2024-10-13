@@ -13,6 +13,7 @@ namespace Clinic
             (new AdminWindow()).Show();
             (new DoctorWindow()).Show();
             (new RegistrarWindow()).Show();
+            (new PatientFormWindow()).Show();
         }
     }
 }

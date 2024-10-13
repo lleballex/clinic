@@ -37,14 +37,12 @@
 
         <DataGrid Grid.Row="4">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" />
-                <DataGridTextColumn Header="Фамилия" />
-                <DataGridTextColumn Header="Имя" />
-                <DataGridTextColumn Header="Отчество" />
+                <DataGridTextColumn Header="ФИО" />
                 <DataGridTextColumn Header="Дата рождения" />
-                <DataGridComboBoxColumn Header="Пол" />
+                <DataGridTextColumn Header="Пол" />
                 <DataGridTextColumn Header="Номер полиса" />
                 <DataGridTextColumn Header="Номер телефона" />
+                <DataGridTextColumn Header="Адрес" />
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

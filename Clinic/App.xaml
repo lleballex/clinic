@@ -14,8 +14,9 @@
 
         <Style TargetType="UserControl" x:Key="ControlDesignStyle">
             <Setter Property="Background" Value="{StaticResource White}" />
-            <Setter Property="Width" Value="500" />
+            <Setter Property="Width" Value="600" />
             <Setter Property="Height" Value="500" />
+            <Setter Property="Padding" Value="16" />
         </Style>
 
         <Style TargetType="Window" x:Key="Window">

@@ -1,0 +1,109 @@
+﻿<Window x:Class="Clinic.Windows.PatientFormWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Clinic.Windows"
+        mc:Ignorable="d"
+        Style="{StaticResource Window}" Width="650" Height="Auto" SizeToContent="Height">
+    <Window.Resources>
+        <Style x:Key="FieldLabel" TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
+            <Setter Property="Margin" Value="0,0,0,8" />
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="16" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="16" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="16" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="16" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="16" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- TODO: or editing -->
+        <TextBlock Grid.Row="0" Style="{StaticResource Heading1}">Добавление пациента</TextBlock>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="16" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="16" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0">
+                <Label Style="{StaticResource FieldLabel}">Фамилия</Label>
+                <TextBox />
+            </StackPanel>
+            <StackPanel Grid.Column="2">
+                <Label Style="{StaticResource FieldLabel}">Имя</Label>
+                <TextBox />
+            </StackPanel>
+            <StackPanel Grid.Column="4">
+                <Label Style="{StaticResource FieldLabel}">Отчество</Label>
+                <TextBox />
+            </StackPanel>
+        </Grid>
+
+        <Grid Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="16" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0">
+                <Label Style="{StaticResource FieldLabel}">Пол</Label>
+                <ComboBox />
+            </StackPanel>
+            <StackPanel Grid.Column="2">
+                <Label Style="{StaticResource FieldLabel}">Дата рождения</Label>
+                <DatePicker />
+            </StackPanel>
+        </Grid>
+
+        <Grid Grid.Row="6">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="16" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0">
+                <Label Style="{StaticResource FieldLabel}">Номер телефона</Label>
+                <TextBox />
+            </StackPanel>
+            <StackPanel Grid.Column="2">
+                <Label Style="{StaticResource FieldLabel}">Номер полиса</Label>
+                <TextBox />
+            </StackPanel>
+        </Grid>
+
+        <Grid Grid.Row="8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="16" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0">
+                <Label Style="{StaticResource FieldLabel}">Улица</Label>
+                <ComboBox />
+            </StackPanel>
+            <StackPanel Grid.Column="2">
+                <Label Style="{StaticResource FieldLabel}">Дом</Label>
+                <ComboBox />
+            </StackPanel>
+        </Grid>
+
+        <StackPanel Grid.Row="10" Orientation="Horizontal">
+            <Button Style="{StaticResource SecondaryButton}" Width="110">Отменить</Button>
+            <!-- TODO: or edit -->
+            <Button Margin="16,0,0,0" Style="{StaticResource PrimaryButton}" Width="110">Добавить</Button>
+        </StackPanel>
+    </Grid>
+</Window>
