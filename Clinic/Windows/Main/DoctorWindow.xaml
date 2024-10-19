@@ -6,10 +6,13 @@
         xmlns:local="clr-namespace:Clinic.Windows"
         xmlns:patientControls="clr-namespace:Clinic.Controls.Patient"
         xmlns:doctorControls="clr-namespace:Clinic.Controls.Doctor"
+        xmlns:appointmentControls="clr-namespace:Clinic.Controls.Appointment"
         mc:Ignorable="d"
         Style="{StaticResource Window}">
     <TabControl>
-        <TabItem Header="Мои приемы">...</TabItem>
+        <TabItem Header="Мои приемы">
+            <appointmentControls:CurDoctorAppointments />
+        </TabItem>
         <TabItem Header="Пациенты">
             <patientControls:Patients />
         </TabItem>
