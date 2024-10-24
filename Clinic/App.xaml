@@ -24,7 +24,7 @@
             <Setter Property="FontSize" Value="14" />
             <Setter Property="Padding" Value="30" />
             <Setter Property="Background" Value="{StaticResource Gray6}" />
-            <Setter Property="Width" Value="900" />
+            <Setter Property="Width" Value="950" />
             <Setter Property="Height" Value="700" />
             <Setter Property="Title" Value="Поликлиника №1" />
         </Style>
@@ -91,6 +91,18 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
+                        <Border Padding="{TemplateBinding Padding}">
+                            <ContentPresenter />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="Button" x:Key="BaseButton">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
                         <Border Padding="14,12" CornerRadius="20" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" Background="{TemplateBinding Background}">
                             <TextBlock Text="{TemplateBinding Content}" Foreground="{TemplateBinding Foreground}" HorizontalAlignment="Center" />
                         </Border>
@@ -99,7 +111,7 @@
             </Setter>
         </Style>
 
-        <Style TargetType="Button" x:Key="PrimaryButton" BasedOn="{StaticResource {x:Type Button}}">
+        <Style TargetType="Button" x:Key="PrimaryButton" BasedOn="{StaticResource BaseButton}">
             <Setter Property="Background" Value="{StaticResource Gray2}" />
             <Setter Property="BorderBrush" Value="{StaticResource Gray2}" />
             <Setter Property="Foreground" Value="{StaticResource White}" />
@@ -111,7 +123,7 @@
             </Style.Triggers>
         </Style>
 
-        <Style TargetType="Button" x:Key="SecondaryButton" BasedOn="{StaticResource {x:Type Button}}">
+        <Style TargetType="Button" x:Key="SecondaryButton" BasedOn="{StaticResource BaseButton}">
             <Setter Property="Background" Value="{StaticResource White}" />
             <Setter Property="BorderBrush" Value="{StaticResource Gray2}" />
             <Setter Property="Foreground" Value="{StaticResource Gray2}" />
@@ -129,7 +141,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TabItem">
-                        <TextBlock Name="TabItemHeader"  Margin="0,0,0,16">
+                        <TextBlock Name="TabItemHeader"  Margin="0,0,0,24">
                     <ContentPresenter ContentSource="Header" x:Name="ContentSite" RecognizesAccessKey="True" />
                         </TextBlock>
                         <ControlTemplate.Triggers>
