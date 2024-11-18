@@ -1,6 +1,7 @@
 ﻿using Clinic.ViewModel.Utils;
 using Clinic.ViewModel.Base;
 using DAL.Repositories;
+using Clinic.View.Windows;
 
 namespace Clinic.ViewModel.Main
 {
@@ -46,7 +47,7 @@ namespace Clinic.ViewModel.Main
                 {
                     _addDoctor = new RelayCommand(() =>
                     {
-
+                        (new DoctorFormWindow(null, LoadDoctors)).ShowDialog();
                     });
                 }
                 return _addDoctor;

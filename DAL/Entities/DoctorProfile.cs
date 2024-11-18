@@ -22,9 +22,12 @@ namespace DAL.Entities
         [Required]
         public int UserId { get; set; }
 
+        [Column("department_id")]
+        public int? DepartmentId { get; set; }
+
         public DoctorSpecialization? Specialization { get; set; }
         public User? User { get; set; }
-        public ICollection<Department>? Departments { get; set; }
+        public Department? Department { get; set; }
         public ICollection<DoctorWorkDay>? WorkDays { get; set; }
     }
 }

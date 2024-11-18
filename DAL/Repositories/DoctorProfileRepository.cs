@@ -17,14 +17,22 @@ namespace DAL.Repositories
             return Context.DoctorProfiles
                 .Include(i => i.User)
                 .Include(i => i.Specialization)
+                .Include(i => i.Department)
                 .Include(i => i.WorkDays)
                 .Where(i =>
-                    (departmentId == null || i.Departments.Any(j => j.Id == departmentId)) &&
+                    (departmentId == null || i.DepartmentId == null || i.DepartmentId == departmentId) &&
                     (specializationId == null || i.SpecializationId == specializationId) &&
                     (query == null || (i.User.Surname + " " + i.User.Name + " " + i.User.Patronymic).Contains(query)))
+                .OrderBy(i => i.User.Surname)
                 .ToList();
         }
 
+        public void Create(DoctorProfile data)
+        {
+            Context.DoctorProfiles.Add(data);
+        }
+
+        // TODO: move somewhere
         public List<TimeOnly> FindFreeTimeSlots(int doctorId, DateOnly date)
         {
             var workDay = Context.DoctorWorkDays.Include(i => i.Doctor).Where(i => i.DoctorId == doctorId && i.WeekDay == date.DayOfWeek).FirstOrDefault();

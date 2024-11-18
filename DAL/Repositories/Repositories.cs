@@ -1,5 +1,6 @@
 ﻿using DAL.Entities;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace DAL.Repositories
 {
@@ -9,6 +10,7 @@ namespace DAL.Repositories
 
         public AppointmentRepository Appointments;
         public AppointmentResultRepository AppointmentsResults;
+        public DepartmentRepository Departments;
         public DiagnosisRepository Diagnosises;
         public DoctorProfileRepository DoctorProfiles;
         public DoctorSpecializationRepository DoctorSpecializations;
@@ -23,6 +25,7 @@ namespace DAL.Repositories
 
             Appointments = new AppointmentRepository(Context);
             AppointmentsResults = new AppointmentResultRepository(Context);
+            Departments = new DepartmentRepository(Context);
             Diagnosises = new DiagnosisRepository(Context);
             DoctorProfiles = new DoctorProfileRepository(Context);
             DoctorSpecializations = new DoctorSpecializationRepository(Context);
@@ -47,6 +50,23 @@ namespace DAL.Repositories
                     _instance = new Repositories();
                 }
                 return _instance;
+            }
+        }
+
+        public void UseTransaction(Action callback)
+        {
+            using (var transaction = Context.Database.BeginTransaction())
+            {
+                try
+                {
+                    callback();
+                    transaction.Commit();
+                }
+                catch 
+                {
+                    transaction.Rollback();
+                    throw;
+                }
             }
         }
 

@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Clinic.View.Windows"
+        xmlns:entities="clr-namespace:DAL.Entities;assembly=DAL" 
         mc:Ignorable="d"
         Style="{StaticResource Window}" Width="650" Height="Auto" SizeToContent="Height">
     <Window.Resources>
@@ -25,10 +26,11 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="16" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="16" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <!-- TODO: or editing -->
-        <TextBlock Grid.Row="0" Style="{StaticResource Heading1}">Добавление врача</TextBlock>
+        <TextBlock Grid.Row="0" Style="{StaticResource Heading1}" Text="{Binding WindowTitle}" />
 
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
@@ -40,15 +42,15 @@
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0">
                 <Label Style="{StaticResource FieldLabel}">Фамилия</Label>
-                <TextBox />
+                <TextBox Text="{Binding DoctorFormModel.Surname}" />
             </StackPanel>
             <StackPanel Grid.Column="2">
                 <Label Style="{StaticResource FieldLabel}">Имя</Label>
-                <TextBox />
+                <TextBox Text="{Binding DoctorFormModel.Name}" />
             </StackPanel>
             <StackPanel Grid.Column="4">
                 <Label Style="{StaticResource FieldLabel}">Отчество</Label>
-                <TextBox />
+                <TextBox Text="{Binding DoctorFormModel.Patronymic}" />
             </StackPanel>
         </Grid>
 
@@ -59,12 +61,12 @@
                 <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0">
-                <Label Style="{StaticResource FieldLabel}">Пол</Label>
-                <ComboBox />
+                <Label Style="{StaticResource FieldLabel}">Email</Label>
+                <TextBox Text="{Binding DoctorFormModel.Email}" />
             </StackPanel>
             <StackPanel Grid.Column="2">
-                <Label Style="{StaticResource FieldLabel}">Дата рождения</Label>
-                <DatePicker />
+                <Label Style="{StaticResource FieldLabel}">Пароль</Label>
+                <TextBox Text="{Binding DoctorFormModel.Password}" />
             </StackPanel>
         </Grid>
 
@@ -75,12 +77,15 @@
                 <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0">
-                <Label Style="{StaticResource FieldLabel}">Номер телефона</Label>
-                <TextBox />
+                <Label Style="{StaticResource FieldLabel}">Пол</Label>
+                <ComboBox SelectedValue="{Binding DoctorFormModel.Gender}" SelectedValuePath="Tag">
+                    <ComboBoxItem Tag="{x:Static entities:UserGender.Male}">Мужской</ComboBoxItem>
+                    <ComboBoxItem Tag="{x:Static entities:UserGender.Female}">Женский</ComboBoxItem>
+                </ComboBox>
             </StackPanel>
             <StackPanel Grid.Column="2">
-                <Label Style="{StaticResource FieldLabel}">Номер полиса</Label>
-                <TextBox />
+                <Label Style="{StaticResource FieldLabel}">Дата рождения</Label>
+                <DatePicker SelectedDate="{Binding DoctorFormModel.BornAt}" />
             </StackPanel>
         </Grid>
 
@@ -91,19 +96,34 @@
                 <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0">
-                <Label Style="{StaticResource FieldLabel}">Улица</Label>
-                <ComboBox />
+                <Label Style="{StaticResource FieldLabel}">Специализация</Label>
+                <ComboBox SelectedValue="{Binding DoctorFormModel.SpecializationId}" SelectedValuePath="Id" DisplayMemberPath="Name" ItemsSource="{Binding Specializations}" />
             </StackPanel>
             <StackPanel Grid.Column="2">
-                <Label Style="{StaticResource FieldLabel}">Дом</Label>
-                <ComboBox />
+                <Label Style="{StaticResource FieldLabel}">Участок</Label>
+                <ComboBox SelectedValue="{Binding DoctorFormModel.DepartmentId}" SelectedValuePath="Id" DisplayMemberPath="Number" ItemsSource="{Binding Departments}" />
             </StackPanel>
         </Grid>
 
-        <StackPanel Grid.Row="10" Orientation="Horizontal">
-            <Button Style="{StaticResource SecondaryButton}" Width="110">Отменить</Button>
-            <!-- TODO: or edit -->
-            <Button Margin="16,0,0,0" Style="{StaticResource PrimaryButton}" Width="110">Добавить</Button>
+        <Grid Grid.Row="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="16" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0">
+                <Label Style="{StaticResource FieldLabel}">Длительность приема (часы)</Label>
+                <TextBox Text="{Binding SelectedHours}" />
+            </StackPanel>
+            <StackPanel Grid.Column="2">
+                <Label Style="{StaticResource FieldLabel}">Длительность приема (минуты)</Label>
+                <TextBox Text="{Binding SelectedMinutes}" />
+            </StackPanel>
+        </Grid>
+
+        <StackPanel Grid.Row="12" Orientation="Horizontal">
+            <Button Style="{StaticResource SecondaryButton}" Width="110" Command="{Binding Cancel}">Отменить</Button>
+            <Button Margin="16,0,0,0" Style="{StaticResource PrimaryButton}" Width="110" Command="{Binding Submit}">Сохранить</Button>
         </StackPanel>
     </Grid>
 </Window>

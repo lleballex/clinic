@@ -14,10 +14,12 @@ namespace DAL.Entities
         [Required]
         public DayOfWeek WeekDay { get; set; }
 
+        // TODO: maybe use DateTime because of timezone
         [Column("started_at")]
         [Required]
         public TimeOnly StartedAt { get; set; }
 
+        // TODO: maybe use DateTime because of timezone
         [Column("ended_at")]
         [Required]
         public TimeOnly EndedAt { get; set; }

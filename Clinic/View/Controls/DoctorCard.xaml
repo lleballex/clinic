@@ -4,8 +4,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Clinic.View.Controls"
+             xmlns:utils="clr-namespace:Clinic.View.Utils"
              mc:Ignorable="d" 
              d:Style="{StaticResource ControlDesignStyle}" d:Background="{StaticResource Gray6}" d:Height="Auto" d:Width="700">
+    <UserControl.Resources>
+        <utils:DoctorProfileDepartmentNumberConverter x:Key="DepartmentNumberConverter" />
+    </UserControl.Resources>
+
     <Border Background="White" CornerRadius="16" Padding="16">
         <Grid>
             <Grid.RowDefinitions>
@@ -41,9 +46,12 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="24" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="24" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" Text="{Binding DoctorBornAt, StringFormat='Дата рождения: {0:dd.MM.yyyy}'}" />
                 <TextBlock Grid.Column="2" Text="{Binding Doctor.AppointmentDuration, StringFormat='Длительность приема: {0:HH:mm}'}" />
+                <TextBlock Grid.Column="4" Text="{Binding Doctor.Department, StringFormat='Участок: {0}', Converter={StaticResource DepartmentNumberConverter}}" />
             </Grid>
 
             <Grid Grid.Row="4">

@@ -48,6 +48,7 @@ namespace DAL.Entities
         [Required]
         public UserGender Gender { get; set; }
 
+        // TODO: maybe use DateOnly
         [Column("born_at")]
         [Required]
         public DateTime BornAt {  get; set; }

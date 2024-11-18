@@ -21,9 +21,4 @@
     <ProjectReference Include="..\DAL\DAL.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Model\" />
-    <Folder Include="View\Windows\Doctor\" />
-  </ItemGroup>
-
 </Project>

@@ -52,7 +52,7 @@ namespace DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Streets",
+                name: "street",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
@@ -61,7 +61,7 @@ namespace DAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Streets", x => x.id);
+                    table.PrimaryKey("PK_street", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -85,7 +85,7 @@ namespace DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Houses",
+                name: "house",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
@@ -96,17 +96,17 @@ namespace DAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Houses", x => x.id);
+                    table.PrimaryKey("PK_house", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Houses_Streets_street_id",
-                        column: x => x.street_id,
-                        principalTable: "Streets",
+                        name: "FK_house_department_department_id",
+                        column: x => x.department_id,
+                        principalTable: "department",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Houses_department_department_id",
-                        column: x => x.department_id,
-                        principalTable: "department",
+                        name: "FK_house_street_street_id",
+                        column: x => x.street_id,
+                        principalTable: "street",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -119,11 +119,18 @@ namespace DAL.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     appointment_duration = table.Column<TimeOnly>(type: "time without time zone", nullable: false),
                     specialization_id = table.Column<int>(type: "integer", nullable: false),
-                    user_id = table.Column<int>(type: "integer", nullable: false)
+                    user_id = table.Column<int>(type: "integer", nullable: false),
+                    department_id = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_doctor_profile", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_doctor_profile_department_department_id",
+                        column: x => x.department_id,
+                        principalTable: "department",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_doctor_profile_doctor_specialization_specialization_id",
                         column: x => x.specialization_id,
@@ -157,33 +164,9 @@ namespace DAL.Migrations
                 {
                     table.PrimaryKey("PK_patient", x => x.id);
                     table.ForeignKey(
-                        name: "FK_patient_Houses_house_id",
+                        name: "FK_patient_house_house_id",
                         column: x => x.house_id,
-                        principalTable: "Houses",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "DepartmentDoctorProfile",
-                columns: table => new
-                {
-                    DepartmentsId = table.Column<int>(type: "integer", nullable: false),
-                    DoctorsId = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DepartmentDoctorProfile", x => new { x.DepartmentsId, x.DoctorsId });
-                    table.ForeignKey(
-                        name: "FK_DepartmentDoctorProfile_department_DepartmentsId",
-                        column: x => x.DepartmentsId,
-                        principalTable: "department",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_DepartmentDoctorProfile_doctor_profile_DoctorsId",
-                        column: x => x.DoctorsId,
-                        principalTable: "doctor_profile",
+                        principalTable: "house",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -288,9 +271,9 @@ namespace DAL.Migrations
                 column: "diagnosis_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DepartmentDoctorProfile_DoctorsId",
-                table: "DepartmentDoctorProfile",
-                column: "DoctorsId");
+                name: "IX_doctor_profile_department_id",
+                table: "doctor_profile",
+                column: "department_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_doctor_profile_specialization_id",
@@ -300,7 +283,8 @@ namespace DAL.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_doctor_profile_user_id",
                 table: "doctor_profile",
-                column: "user_id");
+                column: "user_id",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_doctor_work_day_doctor_id",
@@ -308,13 +292,13 @@ namespace DAL.Migrations
                 column: "doctor_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Houses_department_id",
-                table: "Houses",
+                name: "IX_house_department_id",
+                table: "house",
                 column: "department_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Houses_street_id",
-                table: "Houses",
+                name: "IX_house_street_id",
+                table: "house",
                 column: "street_id");
 
             migrationBuilder.CreateIndex(
@@ -328,9 +312,6 @@ namespace DAL.Migrations
         {
             migrationBuilder.DropTable(
                 name: "appointment_result");
-
-            migrationBuilder.DropTable(
-                name: "DepartmentDoctorProfile");
 
             migrationBuilder.DropTable(
                 name: "doctor_work_day");
@@ -354,13 +335,13 @@ namespace DAL.Migrations
                 name: "user");
 
             migrationBuilder.DropTable(
-                name: "Houses");
-
-            migrationBuilder.DropTable(
-                name: "Streets");
+                name: "house");
 
             migrationBuilder.DropTable(
                 name: "department");
+
+            migrationBuilder.DropTable(
+                name: "street");
         }
     }
 }

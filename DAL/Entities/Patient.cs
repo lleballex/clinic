@@ -29,6 +29,7 @@ namespace DAL.Entities
         [Required]
         public string MedicalPolicyNumber { get; set; }
 
+        // TODO: maybe use DateOnly
         [Column("born_at")]
         [Required]
         public DateTime BornAt { get; set; }
