@@ -95,7 +95,7 @@ namespace Clinic.ViewModel.Base
                     _deletePatient = new RelayCommand(() =>
                     {
                         if (MessageBox.Show(
-                            "Точно удалить пациента?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question
+                            "Точно удалить пациента?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Warning
                         ) == MessageBoxResult.Yes)
                         {
                             Repositories.Patients.Delete(Patient);

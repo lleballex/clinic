@@ -1,5 +1,7 @@
 ﻿using Clinic.ViewModel.Utils;
 using DAL.Entities;
+using DAL.Repositories;
+using System.Windows;
 
 namespace Clinic.ViewModel.Base
 {
@@ -10,6 +12,8 @@ namespace Clinic.ViewModel.Base
             public string WeekDay { get; set; }
             public string Status { get; set; }
         }
+
+        private Repositories Repositories = Repositories.Instance;
 
         private Action OnRepoChange;
 
@@ -84,7 +88,15 @@ namespace Clinic.ViewModel.Base
                 {
                     _deleteDoctor = new RelayCommand(() =>
                     {
-
+                        if (MessageBox.Show(
+                            "Точно удалить доктора?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Warning
+                        ) == MessageBoxResult.Yes)
+                        {
+                            Repositories.Users.Delete(Doctor.User);
+                            Repositories.SaveChanges();
+                            OnRepoChange();
+                            MessageBox.Show("Доктор успешно удален");
+                        }
                     });
                 }
                 return _deleteDoctor;
