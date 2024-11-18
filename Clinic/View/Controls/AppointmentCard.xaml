@@ -1,0 +1,71 @@
+﻿<UserControl x:Class="Clinic.View.Controls.AppointmentCard"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Clinic.View.Controls"
+             mc:Ignorable="d" 
+             d:Style="{StaticResource ControlDesignStyle}" d:Height="Auto" d:Background="{StaticResource Gray6}">
+    <Border Background="{StaticResource White}" CornerRadius="16" Padding="16">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="16" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="16" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="16" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Style="{StaticResource Heading4}" Text="{Binding Computed.Title}" />
+                <StackPanel Grid.Column="2" VerticalAlignment="Center" Orientation="Horizontal">
+                    <TextBlock VerticalAlignment="Center" Text="{Binding Computed.Date}" />
+                    <TextBlock VerticalAlignment="Center" Margin="12,0,0,0" Text="{Binding Computed.Time}" />
+                    <Border Margin="12,0,0,0" CornerRadius="8" Background="{StaticResource Gray4}" Padding="8,4">
+                        <TextBlock Style="{StaticResource Paragraph3}" Text="{Binding Computed.Status}" />
+                    </Border>
+                </StackPanel>
+            </Grid>
+
+            <TextBlock Grid.Row="2" Visibility="{Binding Computed.IsFinished}">
+                Диагноз: <TextBlock Text="{Binding Appointment.Result.Diagnosis.Name}" />.
+                <TextBlock Text="{Binding Appointment.Result.DiagnosisDescription}" />
+            </TextBlock>
+
+            <TextBlock Grid.Row="4" Visibility="{Binding Computed.IsFinished}" Text="{Binding Appointment.Result.Recommendations}" />
+
+            <!--<Grid Grid.Row="6" Visibility="{Binding Status}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0">
+                    Температура: <TextBlock Text="{Binding Result.Temperature}" /> °C
+                </TextBlock>
+                <ProgressBar Grid.Row="1" Minimum="34" Maximum="43" Value="{Binding Result.Temperature}" />
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0">34 °C</TextBlock>
+                    <TextBlock Grid.Column="2">43 °C</TextBlock>
+                </Grid>
+            </Grid>-->
+
+            <StackPanel Grid.Row="6" Orientation="Horizontal" Visibility="{Binding Computed.IsCreated}">
+                <Button Style="{StaticResource SecondaryButton}" Margin="0,0,16,0" >Отменить</Button>
+                <Button Style="{StaticResource PrimaryButton}" Command="{Binding OnGoToResultForm}">Внести результаты</Button>
+            </StackPanel>
+        </Grid>
+    </Border>
+</UserControl>

@@ -1,0 +1,121 @@
+﻿<UserControl x:Class="Clinic.View.Controls.DoctorCard"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Clinic.View.Controls"
+             mc:Ignorable="d" 
+             d:Style="{StaticResource ControlDesignStyle}" d:Background="{StaticResource Gray6}" d:Height="Auto" d:Width="700">
+    <Border Background="White" CornerRadius="16" Padding="16">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="16" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="16" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="16" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Style="{StaticResource Heading4}">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="{}{0} {1} {2}">
+                            <Binding Path="Doctor.User.Surname" />
+                            <Binding Path="Doctor.User.Name" />
+                            <Binding Path="Doctor.User.Patronymic" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+                <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="{Binding Doctor.Specialization.Name}" />
+            </Grid>
+
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="24" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="{Binding DoctorBornAt, StringFormat='Дата рождения: {0:dd.MM.yyyy}'}" />
+                <TextBlock Grid.Column="2" Text="{Binding Doctor.AppointmentDuration, StringFormat='Длительность приема: {0:HH:mm}'}" />
+            </Grid>
+
+            <Grid Grid.Row="4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Border Grid.Column="0" Background="{StaticResource Gray6}" CornerRadius="8" Padding="8">
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource Paragraph3}" HorizontalAlignment="Center" Margin="0,0,0,4" Text="{Binding DoctorWorkDays[0].WeekDay}" />
+                        <TextBlock Style="{StaticResource Paragraph3}" Text="{Binding DoctorWorkDays[0].Status}" />
+                    </StackPanel>
+                </Border>
+                <Border Grid.Column="2" Background="{StaticResource Gray6}" CornerRadius="8" Padding="8">
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource Paragraph3}" HorizontalAlignment="Center" Margin="0,0,0,4" Text="{Binding DoctorWorkDays[1].WeekDay}" />
+                        <TextBlock Style="{StaticResource Paragraph3}" Text="{Binding DoctorWorkDays[1].Status}" />
+                    </StackPanel>
+                </Border>
+                <Border Grid.Column="4" Background="{StaticResource Gray6}" CornerRadius="8" Padding="8">
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource Paragraph3}" HorizontalAlignment="Center" Margin="0,0,0,4" Text="{Binding DoctorWorkDays[2].WeekDay}" />
+                        <TextBlock Style="{StaticResource Paragraph3}" Text="{Binding DoctorWorkDays[2].Status}" />
+                    </StackPanel>
+                </Border>
+                <Border Grid.Column="6" Background="{StaticResource Gray6}" CornerRadius="8" Padding="8">
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource Paragraph3}" HorizontalAlignment="Center" Margin="0,0,0,4" Text="{Binding DoctorWorkDays[3].WeekDay}" />
+                        <TextBlock Style="{StaticResource Paragraph3}" Text="{Binding DoctorWorkDays[3].Status}" />
+                    </StackPanel>
+                </Border>
+                <Border Grid.Column="8" Background="{StaticResource Gray6}" CornerRadius="8" Padding="8">
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource Paragraph3}" HorizontalAlignment="Center" Margin="0,0,0,4" Text="{Binding DoctorWorkDays[4].WeekDay}" />
+                        <TextBlock Style="{StaticResource Paragraph3}" Text="{Binding DoctorWorkDays[4].Status}" />
+                    </StackPanel>
+                </Border>
+                <Border Grid.Column="10" Background="{StaticResource Gray6}" CornerRadius="8" Padding="8">
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource Paragraph3}" HorizontalAlignment="Center" Margin="0,0,0,4" Text="{Binding DoctorWorkDays[5].WeekDay}" />
+                        <TextBlock Style="{StaticResource Paragraph3}" Text="{Binding DoctorWorkDays[5].Status}" />
+                    </StackPanel>
+                </Border>
+                <Border Grid.Column="12" Background="{StaticResource Gray6}" CornerRadius="8" Padding="8">
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource Paragraph3}" HorizontalAlignment="Center" Margin="0,0,0,4" Text="{Binding DoctorWorkDays[6].WeekDay}" />
+                        <TextBlock Style="{StaticResource Paragraph3}" Text="{Binding DoctorWorkDays[6].Status}" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <Grid Grid.Row="6">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="16" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="1" Style="{StaticResource SecondaryButton}" Command="{Binding UpdateDoctor}">Изменить</Button>
+                <Button Grid.Column="3" Style="{StaticResource DangerButton}" Command="{Binding DeleteDoctor}">Удалить</Button>
+            </Grid>
+        </Grid>
+    </Border>
+</UserControl>

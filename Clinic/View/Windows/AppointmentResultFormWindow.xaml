@@ -1,0 +1,63 @@
+﻿<Window x:Class="Clinic.View.Windows.AppointmentResultFormWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Clinic.View.Windows"
+        mc:Ignorable="d"
+        Style="{StaticResource Window}" Width="650" Height="Auto" SizeToContent="Height">
+    <Window.Resources>
+        <Style x:Key="FieldLabel" TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
+            <Setter Property="Margin" Value="0,0,0,8" />
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="16" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="16" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="16" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="16" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="16" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0">
+            <TextBlock Style="{StaticResource Heading1}" Margin="0,0,0,4">Внесение результатов приема</TextBlock>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="{Binding Computed.FullName}" />
+                <TextBlock Grid.Column="2" Text="{Binding Computed.Datetime}" />
+            </Grid>
+        </StackPanel>
+
+        <StackPanel Grid.Row="2">
+            <Label Style="{StaticResource FieldLabel}">Диагноз</Label>
+            <ComboBox ItemsSource="{Binding Diagnosises}" DisplayMemberPath="Name" SelectedValuePath="Id" SelectedValue="{Binding Form.Diagnosis}" />
+        </StackPanel>
+
+        <StackPanel Grid.Row="4">
+            <Label Style="{StaticResource FieldLabel}">Описание диагноза</Label>
+            <TextBox Text="{Binding Form.DiagnosisDescription}" />
+        </StackPanel>
+
+        <StackPanel Grid.Row="6">
+            <Label Style="{StaticResource FieldLabel}">Рекомендации</Label>
+            <TextBox Text="{Binding Form.Recommendations}"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="10" Orientation="Horizontal">
+            <Button Style="{StaticResource SecondaryButton}" Margin="0,0,16,0" Command="{Binding Cancel}" >Отменить</Button>
+            <Button Style="{StaticResource PrimaryButton}" Command="{Binding Submit}">Внести</Button>
+        </StackPanel>
+    </Grid>
+</Window>

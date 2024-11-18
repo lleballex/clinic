@@ -9,6 +9,7 @@
         <SolidColorBrush x:Key="Gray4" Color="#C1C2C7" />
         <SolidColorBrush x:Key="Gray6" Color="#E9EAEE" />
         <SolidColorBrush x:Key="White" Color="#FFFFFF" />
+        <SolidColorBrush x:Key="Red"   Color="#BF1338" />
 
         <!-- Base controls -->
 
@@ -135,6 +136,18 @@
             </Style.Triggers>
         </Style>
 
+        <Style TargetType="Button" x:Key="DangerButton" BasedOn="{StaticResource BaseButton}">
+            <Setter Property="Background" Value="{StaticResource Red}" />
+            <Setter Property="BorderBrush" Value="{StaticResource Red}" />
+            <Setter Property="Foreground" Value="{StaticResource White}" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="Transparent" />
+                    <Setter Property="Foreground" Value="{StaticResource Gray2}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
         <!-- Tabs -->
 
         <Style TargetType="TabItem">
@@ -176,6 +189,13 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+        </Style>
+
+        <!-- ListBox -->
+
+        <Style TargetType="ListBox">
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="Background" Value="Transparent" />
         </Style>
     </Application.Resources>
 </Application>

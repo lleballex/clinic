@@ -1,0 +1,111 @@
+﻿<Window x:Class="Clinic.View.Windows.PatientFormWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Clinic.View.Windows"
+        xmlns:entities="clr-namespace:DAL.Entities;assembly=DAL"
+        mc:Ignorable="d"
+        Style="{StaticResource Window}" Width="650" Height="Auto" SizeToContent="Height">
+    <Window.Resources>
+        <Style x:Key="FieldLabel" TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
+            <Setter Property="Margin" Value="0,0,0,8" />
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="16" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="16" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="16" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="16" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="16" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Style="{StaticResource Heading1}" Text="{Binding WindowTitle}" />
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="16" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="16" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0">
+                <Label Style="{StaticResource FieldLabel}">Фамилия</Label>
+                <TextBox Text="{Binding Form.Surname}" />
+            </StackPanel>
+            <StackPanel Grid.Column="2">
+                <Label Style="{StaticResource FieldLabel}">Имя</Label>
+                <TextBox Text="{Binding Form.Name}" />
+            </StackPanel>
+            <StackPanel Grid.Column="4">
+                <Label Style="{StaticResource FieldLabel}">Отчество</Label>
+                <TextBox Text="{Binding Form.Patronymic}"/>
+            </StackPanel>
+        </Grid>
+
+        <Grid Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="16" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0">
+                <Label Style="{StaticResource FieldLabel}">Пол</Label>
+                <ComboBox SelectedValue="{Binding Form.Gender}" SelectedValuePath="Tag">
+                    <ComboBoxItem Tag="{x:Static entities:PatientGender.Male}">Мужской</ComboBoxItem>
+                    <ComboBoxItem Tag="{x:Static entities:PatientGender.Female}">Женский</ComboBoxItem>
+                </ComboBox>
+            </StackPanel>
+            <StackPanel Grid.Column="2">
+                <Label Style="{StaticResource FieldLabel}">Дата рождения</Label>
+                <DatePicker SelectedDate="{Binding Form.BornAt}" />
+            </StackPanel>
+        </Grid>
+
+        <Grid Grid.Row="6">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="16" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0">
+                <Label Style="{StaticResource FieldLabel}">Номер телефона</Label>
+                <TextBox Text="{Binding Form.PhoneNumber}" />
+            </StackPanel>
+            <StackPanel Grid.Column="2">
+                <Label Style="{StaticResource FieldLabel}">Номер полиса</Label>
+                <TextBox Text="{Binding Form.MedicalPolicyNumber}" />
+            </StackPanel>
+        </Grid>
+
+        <Grid Grid.Row="8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="16" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0">
+                <Label Style="{StaticResource FieldLabel}">Улица</Label>
+                <ComboBox SelectedValue="{Binding FormStreetId}" ItemsSource="{Binding Streets}" DisplayMemberPath="Name" SelectedValuePath="Id" />
+            </StackPanel>
+            <StackPanel Grid.Column="2">
+                <Label Style="{StaticResource FieldLabel}">Дом</Label>
+                <ComboBox SelectedValue="{Binding Form.HouseId}" ItemsSource="{Binding Houses}" DisplayMemberPath="Number" SelectedValuePath="Id" />
+            </StackPanel>
+        </Grid>
+
+        <StackPanel Grid.Row="10" Orientation="Horizontal">
+            <Button Style="{StaticResource SecondaryButton}" Width="110" Command="{Binding Cancel}">Отменить</Button>
+            <Button Margin="16,0,0,0" Style="{StaticResource PrimaryButton}" Width="110" Command="{Binding Submit}">Сохранить</Button>
+        </StackPanel>
+    </Grid>
+</Window>
