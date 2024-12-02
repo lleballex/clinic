@@ -2,6 +2,7 @@
 using Clinic.ViewModel.Utils;
 using DAL.Entities;
 using DAL.Repositories;
+using System.Collections.ObjectModel;
 using System.Windows;
 
 namespace Clinic.ViewModel.Main
@@ -35,14 +36,33 @@ namespace Clinic.ViewModel.Main
                     SpecializationId = doctor.SpecializationId,
                     DepartmentId = doctor.DepartmentId
                 };
+
                 WindowTitle = "Изменение врача";
             } else
             {
                 WindowTitle = "Добавление врача";
             }
 
+            FormWorkDays = [];
+            var weekDays = new List<DayOfWeek>() { DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, DayOfWeek.Thursday, DayOfWeek.Friday, DayOfWeek.Saturday, DayOfWeek.Sunday };
+            for (int i = 0; i < 7; i++)
+            {
+                FormWorkDays.Add(new DoctorFormModelWorkDay()
+                {
+                    WeekDay = weekDays[i],
+                    IsWeekend = true
+                });
+            }
+
             LoadSpecializations();
             LoadDepartments();
+        }
+
+        private ObservableCollection<DoctorFormModelWorkDay> _formWorkDays;
+        public ObservableCollection<DoctorFormModelWorkDay> FormWorkDays
+        {
+            get => _formWorkDays;
+            set { _formWorkDays = value; OnPropertyChanged(); }
         }
 
         private string _windowTitle;
@@ -105,6 +125,46 @@ namespace Clinic.ViewModel.Main
             );
         }
 
+        private RelayCommand _makeWorkDayNotWeekend;
+        public RelayCommand MakeWorkDayNotWeekend
+        {
+            get => _makeWorkDayNotWeekend ??= new RelayCommand((obj) =>
+            {
+                if (obj is DoctorFormModelWorkDay workDay)
+                {
+                    var idx = FormWorkDays.IndexOf(workDay);
+                    if (idx != -1)
+                    {
+                        FormWorkDays[idx]= new DoctorFormModelWorkDay()
+                        {
+                            WeekDay = workDay.WeekDay,
+                            IsWeekend = false,
+                        };
+                    }
+                }
+            });
+        }
+
+        private RelayCommand _makeWorkDayWeekend;
+        public RelayCommand MakeWorkDayWeekend
+        {
+            get => _makeWorkDayWeekend ??= new RelayCommand((obj) =>
+            {
+                if (obj is DoctorFormModelWorkDay workDay)
+                {
+                    var idx = FormWorkDays.IndexOf(workDay);
+                    if (idx != -1)
+                    {
+                        FormWorkDays[idx]= new DoctorFormModelWorkDay()
+                        {
+                            WeekDay = workDay.WeekDay,
+                            IsWeekend = true,
+                        };
+                    }
+                }
+            });
+        }
+
         private RelayCommand? _submit;
         public RelayCommand Submit
         {
@@ -137,7 +197,23 @@ namespace Clinic.ViewModel.Main
                             Repositories.Users.Create(userData);
                             Repositories.SaveChanges();
                             Doctor.UserId = userData.Id;
+
                             Repositories.DoctorProfiles.Create(Doctor);
+                            Repositories.SaveChanges();
+
+                            foreach (var workDay in FormWorkDays)
+                            {
+                                if (!workDay.IsWeekend)
+                                {
+                                    Repositories.DoctorWorkDays.Create(new DoctorWorkDay()
+                                    {
+                                        DoctorId = Doctor.Id,
+                                        WeekDay = workDay.WeekDay,
+                                        StartedAt = new TimeOnly(workDay.StartedAtHours, workDay.StartedAtMinutes),
+                                        EndedAt = new TimeOnly(workDay.EndedAtHours, workDay.EndedAtMinutes),
+                                    });
+                                }
+                            }
                             Repositories.SaveChanges();
                         });
 

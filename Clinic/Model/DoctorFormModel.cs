@@ -2,6 +2,16 @@
 
 namespace Clinic.Model
 {
+    public class DoctorFormModelWorkDay
+    {
+        public int StartedAtMinutes { get; set; }
+        public int StartedAtHours { get; set; }
+        public int EndedAtMinutes { get; set; }
+        public int EndedAtHours { get; set; }
+        public DayOfWeek WeekDay { get; set; }
+        public bool IsWeekend { get; set; }
+    }
+
     public class DoctorFormModel
     {
         public string Email { get; set; }
@@ -14,5 +24,6 @@ namespace Clinic.Model
         public TimeOnly AppointmentDuration { get; set; }
         public int SpecializationId { get; set; }
         public int? DepartmentId { get; set; }
+        //public List<DoctorFormModelWorkDay> WorkDays { get; set; }
     }
 }
