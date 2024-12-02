@@ -1,8 +1,4 @@
-﻿using DAL.Entities;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.EntityFrameworkCore.Storage;
-
-namespace DAL.Repositories
+﻿namespace DAL.Repositories
 {
     public class Repositories
     {
@@ -14,6 +10,7 @@ namespace DAL.Repositories
         public DiagnosisRepository Diagnosises;
         public DoctorProfileRepository DoctorProfiles;
         public DoctorSpecializationRepository DoctorSpecializations;
+        public DoctorWorkDayRepository DoctorWorkDays;
         public HouseRepository Houses;
         public PatientRepository Patients;
         public StreetRepository Streets;
@@ -29,6 +26,7 @@ namespace DAL.Repositories
             Diagnosises = new DiagnosisRepository(Context);
             DoctorProfiles = new DoctorProfileRepository(Context);
             DoctorSpecializations = new DoctorSpecializationRepository(Context);
+            DoctorWorkDays = new DoctorWorkDayRepository(Context);
             Houses = new HouseRepository(Context);
             Patients = new PatientRepository(Context);
             Streets = new StreetRepository(Context);
