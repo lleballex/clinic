@@ -11,5 +11,15 @@ namespace Clinic.View.Controls
 
             DataContext = new PatientsVM();
         }
+
+        // chmi
+
+        private void ScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            if (DataContext is PatientsVM vm && sender is ScrollViewer scrollViewer)
+            {
+                vm.ScrollProgress = scrollViewer.VerticalOffset / scrollViewer.ScrollableHeight * 100;
+            }
+        }
     }
 }

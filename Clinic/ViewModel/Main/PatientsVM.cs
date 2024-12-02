@@ -53,5 +53,14 @@ namespace Clinic.ViewModel.Main
                 return _goToPatientForm;
             }
         }
+
+        // chmi
+
+        private double _scrollProgress;
+        public double ScrollProgress
+        {
+            get => _scrollProgress;
+            set { _scrollProgress = value; OnPropertyChanged(); }
+        }
     }
 }

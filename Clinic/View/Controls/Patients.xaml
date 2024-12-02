@@ -6,7 +6,10 @@
              xmlns:local="clr-namespace:Clinic.View.Controls"
              mc:Ignorable="d" 
              d:Style="{StaticResource ControlDesignStyle}">
-    <ScrollViewer Padding="0,0,16,0">
+    <StackPanel>
+        <ProgressBar Value="{Binding ScrollProgress}" Height="10" Margin="0,0,0,16" />
+
+        <ScrollViewer Padding="0,0,16,0" Height="600" ScrollChanged="ScrollViewer_ScrollChanged" > 
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -36,15 +39,14 @@
                 <Button Grid.Column="2" Style="{StaticResource SecondaryButton}">Найти</Button>
             </Grid>
 
-        <StackPanel Grid.Row="4">
-                <ItemsControl ItemsSource="{Binding Patients}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <local:PatientCard DataContext="{Binding}" Margin="0,0,0,16" />
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </StackPanel>
+            <ItemsControl Grid.Row="4" ItemsSource="{Binding Patients}" Margin="0,0,0,-16">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <local:PatientCard DataContext="{Binding}" Margin="0,0,0,16" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </Grid>
-    </ScrollViewer>
+        </ScrollViewer>
+    </StackPanel>
 </UserControl>
