@@ -18,6 +18,13 @@ namespace Clinic.ViewModel.Base
             OnRepoChange = onRepoChange;
         }
 
+        private UserRole _userRole;
+        public UserRole UserRole
+        {
+            get => _userRole;
+            set { _userRole = value; OnPropertyChanged(); }
+        }
+
         private Patient _patient;
         public Patient Patient
         {

@@ -51,7 +51,7 @@ namespace Clinic.ViewModel.Base
 
             if (ForRole == ForRoleEnum.Doctor)
             {
-                computed.Title = "";
+                computed.Title = $"{Appointment.Patient.Surname} {Appointment.Patient.Name} {Appointment.Patient.Patronymic}";
             }
             else if (ForRole == ForRoleEnum.Patient)
             {

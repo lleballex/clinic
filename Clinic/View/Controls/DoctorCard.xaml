@@ -9,21 +9,12 @@
              d:Style="{StaticResource ControlDesignStyle}" d:Background="{StaticResource Gray6}" d:Height="Auto" d:Width="700">
     <UserControl.Resources>
         <utils:DoctorProfileDepartmentNumberConverter x:Key="DepartmentNumberConverter" />
+        <utils:IsAdminConverter x:Key="IsAdminConverter" />
     </UserControl.Resources>
 
-    <Border Background="White" CornerRadius="16" Padding="16">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="16" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="16" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="16" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-
-            <Grid Grid.Row="0">
+    <Border Background="White" CornerRadius="16" Padding="16,16,16,0">
+        <StackPanel>
+            <Grid Margin="0,0,0,16">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="1*" />
@@ -41,7 +32,9 @@
                 <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="{Binding Doctor.Specialization.Name}" />
             </Grid>
 
-            <Grid Grid.Row="2">
+            <TextBlock Margin="0,0,0,16" Grid.Column="0" Text="{Binding Doctor.User.Email, StringFormat='Email: {0}'}" />
+
+            <Grid Margin="0,0,0,16">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="24" />
@@ -54,7 +47,7 @@
                 <TextBlock Grid.Column="4" Text="{Binding Doctor.Department, StringFormat='Участок: {0}', Converter={StaticResource DepartmentNumberConverter}}" />
             </Grid>
 
-            <Grid Grid.Row="4">
+            <Grid Margin="0,0,0,16">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="1*" />
@@ -114,7 +107,7 @@
                 </Border>
             </Grid>
 
-            <Grid Grid.Row="6">
+            <Grid Margin="0,0,0,16" Visibility="{Binding UserRole, Converter={StaticResource IsAdminConverter}}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*" />
                     <ColumnDefinition Width="Auto" />
@@ -124,6 +117,6 @@
                 <Button Grid.Column="1" Style="{StaticResource SecondaryButton}" Command="{Binding UpdateDoctor}">Изменить</Button>
                 <Button Grid.Column="3" Style="{StaticResource DangerButton}" Command="{Binding DeleteDoctor}">Удалить</Button>
             </Grid>
-        </Grid>
+        </StackPanel>
     </Border>
 </UserControl>

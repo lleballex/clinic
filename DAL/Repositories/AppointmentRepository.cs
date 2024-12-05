@@ -12,6 +12,20 @@ namespace DAL.Repositories
             Context = context;
         }
 
+        public List<Appointment> FindAll(int? patientId = null, int? doctorId = null, DateOnly? date = null)
+        {
+            return Context.Appointments
+                .Include(i => i.Result)
+                .ThenInclude(i => i.Diagnosis)
+                .Include(i => i.Doctor)
+                .ThenInclude(i => i.Specialization)
+                .Include(i => i.Patient)
+                .Where(i => (patientId == null || i.PatientId == patientId) && (doctorId == null || i.DoctorId == doctorId) && (date == null || DateOnly.FromDateTime(i.Datetime.ToLocalTime()) == date))
+                .OrderByDescending(i => i.Datetime)
+                .ToList();
+        }
+
+        // TODO: remove
         public List<Appointment> FindByPatient(int patientId)
         {
             return Context.Appointments

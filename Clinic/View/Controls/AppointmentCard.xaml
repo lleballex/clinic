@@ -7,18 +7,8 @@
              mc:Ignorable="d" 
              d:Style="{StaticResource ControlDesignStyle}" d:Height="Auto" d:Background="{StaticResource Gray6}">
     <Border Background="{StaticResource White}" CornerRadius="16" Padding="16">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="16" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="16" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="16" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-
-            <Grid Grid.Row="0">
+        <StackPanel Margin="0,0,0,-16">
+            <Grid Margin="0,0,0,16">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="1*" />
@@ -34,38 +24,17 @@
                 </StackPanel>
             </Grid>
 
-            <TextBlock Grid.Row="2" Visibility="{Binding Computed.IsFinished}">
+            <TextBlock Margin="0,0,0,16" Visibility="{Binding Computed.IsFinished}">
                 Диагноз: <TextBlock Text="{Binding Appointment.Result.Diagnosis.Name}" />.
                 <TextBlock Text="{Binding Appointment.Result.DiagnosisDescription}" />
             </TextBlock>
 
-            <TextBlock Grid.Row="4" Visibility="{Binding Computed.IsFinished}" Text="{Binding Appointment.Result.Recommendations}" />
+            <TextBlock Margin="0,0,0,16" Visibility="{Binding Computed.IsFinished}" Text="{Binding Appointment.Result.Recommendations}" />
 
-            <!--<Grid Grid.Row="6" Visibility="{Binding Status}">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="30" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0">
-                    Температура: <TextBlock Text="{Binding Result.Temperature}" /> °C
-                </TextBlock>
-                <ProgressBar Grid.Row="1" Minimum="34" Maximum="43" Value="{Binding Result.Temperature}" />
-                <Grid Grid.Row="2">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0">34 °C</TextBlock>
-                    <TextBlock Grid.Column="2">43 °C</TextBlock>
-                </Grid>
-            </Grid>-->
-
-            <StackPanel Grid.Row="6" Orientation="Horizontal" Visibility="{Binding Computed.IsCreated}">
-                <Button Style="{StaticResource SecondaryButton}" Margin="0,0,16,0" >Отменить</Button>
+            <StackPanel Margin="0,0,0,16" Orientation="Horizontal" Visibility="{Binding Computed.IsCreated}">
+                <Button Style="{StaticResource SecondaryButton}" Margin="0,0,16,0">Отменить</Button>
                 <Button Style="{StaticResource PrimaryButton}" Command="{Binding OnGoToResultForm}">Внести результаты</Button>
             </StackPanel>
-        </Grid>
+        </StackPanel>
     </Border>
 </UserControl>

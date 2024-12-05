@@ -8,14 +8,14 @@
         mc:Ignorable="d"
         Style="{StaticResource Window}">
     <TabControl SelectedIndex="1">
-        <TabItem Header="Мои приемы" Visibility="Collapsed">
+        <TabItem Header="Мои приемы">
             <controls:CurDoctorAppointments />
         </TabItem>
         <TabItem Header="Пациенты">
-            <controls:Patients />
+            <controls:Patients UserRole="Doctor" />
         </TabItem>
-        <TabItem Header="Врачи" Visibility="Collapsed">
-            <controls:Doctors />
+        <TabItem Header="Врачи">
+            <controls:Doctors UserRole="Doctor" />
         </TabItem>
     </TabControl>
 </Window>

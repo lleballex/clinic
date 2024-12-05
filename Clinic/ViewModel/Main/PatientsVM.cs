@@ -2,6 +2,7 @@
 using Clinic.ViewModel.Base;
 using Clinic.View.Windows;
 using DAL.Repositories;
+using DAL.Entities;
 
 namespace Clinic.ViewModel.Main
 {
@@ -12,6 +13,13 @@ namespace Clinic.ViewModel.Main
         public PatientsVM()
         {
             LoadPatients();
+        }
+
+        private UserRole _userRole;
+        public UserRole UserRole
+        {
+            get => _userRole;
+            set { _userRole = value; OnPropertyChanged(); LoadPatients(); }
         }
 
         private List<PatientCardVM> _patients = [];
@@ -33,7 +41,7 @@ namespace Clinic.ViewModel.Main
             List<PatientCardVM> newPatients = [];
             foreach (var patient in Repositories.Patients.FindAll(Query))
             {
-                newPatients.Add(new PatientCardVM(patient, LoadPatients));
+                newPatients.Add(new PatientCardVM(patient, LoadPatients) { UserRole = UserRole });
             }
             Patients = newPatients;
         }

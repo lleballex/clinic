@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using Clinic.ViewModel.Main;
+using System.Windows.Controls;
 
 namespace Clinic.View.Controls
 {
@@ -7,6 +8,8 @@ namespace Clinic.View.Controls
         public CurDoctorAppointments()
         {
             InitializeComponent();
+
+            DataContext = new CurDoctorAppointmentsVM();
         }
     }
 }

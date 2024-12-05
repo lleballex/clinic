@@ -18,16 +18,15 @@
 
             <TextBlock Grid.Row="0" Style="{StaticResource Heading1}">Мои приемы</TextBlock>
 
-            <DatePicker Grid.Row="2" />
+            <DatePicker Grid.Row="2" SelectedDate="{Binding SelectedDate}" />
 
-            <StackPanel Grid.Row="4">
-                <local:AppointmentCard Margin="0,0,0,16" />
-                <local:AppointmentCard Margin="0,0,0,16" />
-                <local:AppointmentCard Margin="0,0,0,16" />
-                <local:AppointmentCard Margin="0,0,0,16" />
-                <local:AppointmentCard Margin="0,0,0,16" />
-                <local:AppointmentCard />
-            </StackPanel>
+            <ItemsControl Grid.Row="4" Margin="0,0,0,-16" ItemsSource="{Binding Appointments}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <local:AppointmentCard Margin="0,0,0,16" DataContext="{Binding}" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </Grid>
     </ScrollViewer>
 </UserControl>

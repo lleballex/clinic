@@ -23,6 +23,13 @@ namespace Clinic.ViewModel.Base
             Doctor = doctor;
         }
 
+        private UserRole _userRole;
+        public UserRole UserRole
+        {
+            get => _userRole;
+            set { _userRole = value; OnPropertyChanged(); }
+        }
+
         private DoctorProfile _doctor;
         public DoctorProfile Doctor
         {

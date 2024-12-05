@@ -1,5 +1,6 @@
 ﻿using System.Windows.Controls;
 using Clinic.ViewModel.Main;
+using DAL.Entities;
 
 namespace Clinic.View.Controls
 {
@@ -10,6 +11,13 @@ namespace Clinic.View.Controls
             InitializeComponent();
 
             DataContext = new DoctorsVM();
+        }
+
+        private UserRole _userRole;
+        public UserRole UserRole
+        { 
+            get => _userRole; 
+            set { _userRole = value; (DataContext as DoctorsVM).UserRole = value; }
         }
     }
 }
