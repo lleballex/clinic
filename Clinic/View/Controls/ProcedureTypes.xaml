@@ -1,0 +1,50 @@
+﻿<UserControl x:Class="Clinic.View.Controls.ProcedureTypes"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Clinic.View.Controls"
+             mc:Ignorable="d" 
+             d:Style="{StaticResource ControlDesignStyle}">
+    <ScrollViewer Padding="0,0,16,0" VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="0,0,0,-16">
+            <Grid Margin="0,0,0,16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Style="{StaticResource Heading1}">Процедуры</TextBlock>
+                <Button Grid.Column="2" Style="{StaticResource PrimaryButton}" VerticalAlignment="Center" Command="{Binding AddType}">Добавить процедуру</Button>
+            </Grid>
+
+            <StackPanel Margin="0,0,0,16" Orientation="Horizontal">
+                <TextBox Margin="0,0,8,0" Width="250" Text="{Binding FormQuery}" />
+                <Button Style="{StaticResource SecondaryButton}">Найти</Button>
+            </StackPanel>
+
+            <StackPanel>
+                <ItemsControl ItemsSource="{Binding Types}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Margin="0,0,0,16" Padding="16" CornerRadius="16" Background="{StaticResource White}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="1*" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="16" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="1" Style="{StaticResource Paragraph1}" VerticalAlignment="Center" Text="{Binding Name}" />
+                                    <Button Grid.Column="2" Style="{StaticResource SecondaryButton}" Command="{Binding DataContext.EditType, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}">Изменить</Button>
+                                    <Button Grid.Column="4" Style="{StaticResource DangerButton}" Command="{Binding DataContext.DeleteType, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}">Удалить</Button>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
