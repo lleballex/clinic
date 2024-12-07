@@ -11,9 +11,28 @@ namespace DAL.Repositories
             Context = context;
         }
 
-        public List<Diagnosis> FindAll()
+        public List<Diagnosis> FindAll(string? query = null)
         {
-            return Context.Diagnosises.OrderByDescending(i => i.Name).ToList();
+            return Context.Diagnosises
+                .OrderBy(i => i.Name)
+                .Where(i => (query == null || i.Name.Contains(query)))
+                .ToList();
+        }
+
+        public void Create(Diagnosis data)
+        {
+            Context.Diagnosises.Add(data);
+        }
+
+        public void Update(Diagnosis data)
+        {
+            Context.ChangeTracker.Clear();
+            Context.Diagnosises.Update(data);
+        }
+
+        public void Delete(Diagnosis data)
+        {
+            Context.Diagnosises.Remove(data);
         }
     }
 }
