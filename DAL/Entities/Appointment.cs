@@ -31,10 +31,14 @@ namespace DAL.Entities
         [Required]
         public int DoctorId { get; set; }
 
+        [Column("procedure_id")]
+        public int? ProcedureId { get; set; }
+
         public Patient? Patient { get; set; }
-
         public DoctorProfile? Doctor { get; set; }
-
         public AppointmentResult? Result { get; set; }
+
+        public Procedure? Procedure { get; set; }
+        public ICollection<Procedure>? AssignedProcedures { get; set; }
     }
 }

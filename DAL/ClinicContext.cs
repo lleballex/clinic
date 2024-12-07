@@ -15,8 +15,6 @@ namespace DAL
         public DbSet<House> Houses { get; set; }
         public DbSet<Patient> Patients { get; set; }
         public DbSet<Procedure> Procedures { get; set; }
-        public DbSet<ProcedureResult> ProcedureResults { get; set; }
-        public DbSet<ProcedurerProfile> ProcedurerProfiles { get; set; }
         public DbSet<ProcedureType> ProcedureTypes { get; set; }
         public DbSet<Street> Streets { get; set; }
         public DbSet<User> Users { get; set; }
@@ -24,7 +22,27 @@ namespace DAL
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             // TODO: move to config
-            optionsBuilder.UseNpgsql("Host=192.168.1.50;Port=5432;Username=leshalebedev;Database=clinic_new");
+            optionsBuilder.UseNpgsql("Host=172.20.10.8;Port=5432;Username=leshalebedev;Database=clinic_new");
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder
+                .Entity<Procedure>()
+                .HasOne(i => i.AssignedAppointment)
+                .WithMany(i => i.AssignedProcedures)
+                .HasForeignKey(i => i.AssignedAppointmentId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder
+                .Entity<Appointment>()
+                .HasOne(i => i.Procedure)
+                .WithOne(i => i.Appointment)
+                .HasForeignKey<Appointment>(i => i.ProcedureId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired(false);
         }
     }
 }

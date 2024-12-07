@@ -13,7 +13,5 @@ namespace DAL.Entities
         [Column("name")]
         [Required]
         public string Name { get; set; }
-
-        public ICollection<ProcedurerProfile>? Procedurers { get; set; }
     }
 }
