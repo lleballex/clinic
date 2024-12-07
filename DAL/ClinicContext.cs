@@ -14,6 +14,10 @@ namespace DAL
         public DbSet<DoctorWorkDay> DoctorWorkDays { get; set; }
         public DbSet<House> Houses { get; set; }
         public DbSet<Patient> Patients { get; set; }
+        public DbSet<Procedure> Procedures { get; set; }
+        public DbSet<ProcedureResult> ProcedureResults { get; set; }
+        public DbSet<ProcedurerProfile> ProcedurerProfiles { get; set; }
+        public DbSet<ProcedureType> ProcedureTypes { get; set; }
         public DbSet<Street> Streets { get; set; }
         public DbSet<User> Users { get; set; }
 

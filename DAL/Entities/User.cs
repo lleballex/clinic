@@ -5,7 +5,7 @@ namespace DAL.Entities
 {
     public enum UserRole
     {
-        Doctor, Admin, Registrar
+        Doctor, Admin, Registrar, Procedurer
     }
 
     public enum UserGender
@@ -54,5 +54,6 @@ namespace DAL.Entities
         public DateTime BornAt {  get; set; }
 
         public DoctorProfile? Doctor { get; set; }
+        public ProcedurerProfile? Procedurer { get; set; }
     }
 }

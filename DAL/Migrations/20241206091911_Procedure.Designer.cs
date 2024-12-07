@@ -3,6 +3,7 @@ using System;
 using DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DAL.Migrations
 {
     [DbContext(typeof(ClinicContext))]
-    partial class ClinicContextModelSnapshot : ModelSnapshot
+    [Migration("20241206091911_Procedure")]
+    partial class Procedure
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -312,10 +315,6 @@ namespace DAL.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("appointment_id");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
                     b.Property<int>("PatientId")
                         .HasColumnType("integer")
                         .HasColumnName("patient_id");
@@ -385,7 +384,12 @@ namespace DAL.Migrations
                         .HasColumnType("text")
                         .HasColumnName("name");
 
+                    b.Property<int?>("ProcedurerProfileId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ProcedurerProfileId");
 
                     b.ToTable("procedure_type");
                 });
@@ -478,21 +482,6 @@ namespace DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("user");
-                });
-
-            modelBuilder.Entity("ProcedureTypeProcedurerProfile", b =>
-                {
-                    b.Property<int>("ProcedurersId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("procedureTypesId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("ProcedurersId", "procedureTypesId");
-
-                    b.HasIndex("procedureTypesId");
-
-                    b.ToTable("ProcedureTypeProcedurerProfile");
                 });
 
             modelBuilder.Entity("DAL.Entities.Appointment", b =>
@@ -643,6 +632,13 @@ namespace DAL.Migrations
                     b.Navigation("Procedurer");
                 });
 
+            modelBuilder.Entity("DAL.Entities.ProcedureType", b =>
+                {
+                    b.HasOne("DAL.Entities.ProcedurerProfile", null)
+                        .WithMany("procedureTypes")
+                        .HasForeignKey("ProcedurerProfileId");
+                });
+
             modelBuilder.Entity("DAL.Entities.ProcedurerProfile", b =>
                 {
                     b.HasOne("DAL.Entities.User", "User")
@@ -652,21 +648,6 @@ namespace DAL.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("ProcedureTypeProcedurerProfile", b =>
-                {
-                    b.HasOne("DAL.Entities.ProcedurerProfile", null)
-                        .WithMany()
-                        .HasForeignKey("ProcedurersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DAL.Entities.ProcedureType", null)
-                        .WithMany()
-                        .HasForeignKey("procedureTypesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("DAL.Entities.Appointment", b =>
@@ -687,6 +668,11 @@ namespace DAL.Migrations
             modelBuilder.Entity("DAL.Entities.Procedure", b =>
                 {
                     b.Navigation("Result");
+                });
+
+            modelBuilder.Entity("DAL.Entities.ProcedurerProfile", b =>
+                {
+                    b.Navigation("procedureTypes");
                 });
 
             modelBuilder.Entity("DAL.Entities.User", b =>
