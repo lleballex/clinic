@@ -33,6 +33,9 @@
             <TabItem Header="Процедуры">
                 <controls:ProcedureTypes />
             </TabItem>
+            <TabItem Header="Статистика">
+                <controls:Statistics />
+            </TabItem>
         </TabControl>
     </Grid>
 </Window>

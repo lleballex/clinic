@@ -1,0 +1,40 @@
+﻿<UserControl x:Class="Clinic.View.Controls.Statistics"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Clinic.View.Controls"
+             mc:Ignorable="d" 
+             d:Style="{StaticResource ControlDesignStyle}">
+    <StackPanel Margin="0,0,0,-16">
+        <TextBlock Margin="0,0,0,16" Style="{StaticResource Heading1}">Статистика по заболеваниям</TextBlock>
+
+        <Grid Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="16" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0">
+                <Label Margin="0,0,0,8">Дата начала</Label>
+                <DatePicker SelectedDate="{Binding FormStartedAt}" />
+            </StackPanel>
+            <StackPanel Grid.Column="2">
+                <Label Margin="0,0,0,8">Дата окончания</Label>
+                <DatePicker SelectedDate="{Binding FormEndedAt}" />
+            </StackPanel>
+        </Grid>
+
+        <StackPanel Margin="0,0,0,16" Orientation="Horizontal">
+            <Button Margin="0,0,16,0" Style="{StaticResource PrimaryButton}" Command="{Binding GenerateReport}">Сформировать отчет</Button>
+            <Button Margin="0,0,16,0" Style="{StaticResource SecondaryButton}" Command="{Binding ExportReport}">Экспортировать отчет</Button>
+        </StackPanel>
+
+        <DataGrid Margin="0,0,0,16" ItemsSource="{Binding Report}" AutoGenerateColumns="False" IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Диагноз" Binding="{Binding Diagnosis.Name}" />
+                <DataGridTextColumn Header="Количество" Binding="{Binding Count}" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </StackPanel>
+</UserControl>

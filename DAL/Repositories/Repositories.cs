@@ -15,6 +15,7 @@
         public PatientRepository Patients;
         public ProcedureRepository Procedures;
         public ProcedureTypeRepository ProcedureTypes;
+        public ReportRepository Reports;
         public StreetRepository Streets;
         public UserRepository Users;
 
@@ -33,6 +34,7 @@
             Patients = new PatientRepository(Context);
             Procedures = new ProcedureRepository(Context);
             ProcedureTypes = new ProcedureTypeRepository(Context);
+            Reports = new ReportRepository(Context);
             Streets = new StreetRepository(Context);
             Users = new UserRepository(Context);
         }
