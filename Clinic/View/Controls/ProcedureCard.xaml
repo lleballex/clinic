@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="Clinic.View.Controls.ProcedureCard"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Clinic.View.Controls"
+             xmlns:utils="clr-namespace:Clinic.View.Utils"
+             mc:Ignorable="d" 
+             d:Style="{StaticResource ControlDesignStyle}" d:Height="Auto" d:Background="{StaticResource Gray6}">
+    <UserControl.Resources>
+        <utils:ProcedureStatusConverter x:Key="ProcedureStatusConverter" />
+        <utils:IsProcedureWithoutAppointment x:Key="IsProcedureWithoutAppointment" />
+        <utils:IsProcedureWithAppointment x:Key="IsProcedureWithAppointment" />
+    </UserControl.Resources>
+
+    <Border CornerRadius="16" Padding="16" BorderThickness="1" BorderBrush="{StaticResource Gray4}">
+        <StackPanel Margin="0,0,0,-16">
+            <Grid Margin="0,0,0,16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Style="{StaticResource Heading5}" Text="{Binding Procedure.Type.Name}" />
+                <Border Grid.Column="2" CornerRadius="8" Padding="8,4" Background="{StaticResource Gray4}">
+                    <TextBlock Text="{Binding Procedure.Appointment, Converter={StaticResource ProcedureStatusConverter}}" Style="{StaticResource Paragraph3}" />
+                </Border>
+            </Grid>
+            <Button Margin="0,0,0,16" Visibility="{Binding Procedure, Converter={StaticResource IsProcedureWithoutAppointment}}" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Left" Command="{Binding MakeAppointment}">Записать</Button>
+            <TextBlock Margin="0,0,0,16" Visibility="{Binding Procedure, Converter={StaticResource IsProcedureWithAppointment}}" Text="Результаты приема выше" />
+        </StackPanel>
+    </Border>
+</UserControl>

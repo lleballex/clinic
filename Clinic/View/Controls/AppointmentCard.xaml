@@ -31,6 +31,17 @@
 
             <TextBlock Margin="0,0,0,16" Visibility="{Binding Computed.IsFinished}" Text="{Binding Appointment.Result.Recommendations}" />
 
+            <StackPanel Margin="0,0,0,16" Visibility="{Binding Computed.HasProcedures}">
+                <TextBlock Margin="0,0,0,16" Style="{StaticResource Heading5}">Процедуры</TextBlock>
+                <ItemsControl ItemsSource="{Binding Procedures}" Margin="0,0,0,-16">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <local:ProcedureCard DataContext="{Binding}" Margin="0,0,0,16" />
+                        </DataTemplate>        
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+
             <StackPanel Margin="0,0,0,16" Orientation="Horizontal" Visibility="{Binding Computed.IsCreated}">
                 <Button Style="{StaticResource SecondaryButton}" Margin="0,0,16,0">Отменить</Button>
                 <Button Style="{StaticResource PrimaryButton}" Command="{Binding OnGoToResultForm}">Внести результаты</Button>

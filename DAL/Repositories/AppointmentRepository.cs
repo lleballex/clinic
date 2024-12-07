@@ -20,20 +20,11 @@ namespace DAL.Repositories
                 .Include(i => i.Doctor)
                 .ThenInclude(i => i.Specialization)
                 .Include(i => i.Patient)
+                .Include(i => i.AssignedProcedures)
+                .ThenInclude(i => i.Type)
+                .Include(i => i.AssignedProcedures)
+                .ThenInclude(i => i.Appointment)
                 .Where(i => (patientId == null || i.PatientId == patientId) && (doctorId == null || i.DoctorId == doctorId) && (date == null || DateOnly.FromDateTime(i.Datetime.ToLocalTime()) == date))
-                .OrderByDescending(i => i.Datetime)
-                .ToList();
-        }
-
-        // TODO: remove
-        public List<Appointment> FindByPatient(int patientId)
-        {
-            return Context.Appointments
-                .Include(i => i.Result)
-                .ThenInclude(i => i.Diagnosis)
-                .Include(i => i.Doctor)
-                .ThenInclude(i => i.Specialization)
-                .Where(i => i.PatientId == patientId)
                 .OrderByDescending(i => i.Datetime)
                 .ToList();
         }

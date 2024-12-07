@@ -13,6 +13,8 @@
         public DoctorWorkDayRepository DoctorWorkDays;
         public HouseRepository Houses;
         public PatientRepository Patients;
+        public ProcedureRepository Procedures;
+        public ProcedureTypeRepository ProcedureTypes;
         public StreetRepository Streets;
         public UserRepository Users;
 
@@ -29,6 +31,8 @@
             DoctorWorkDays = new DoctorWorkDayRepository(Context);
             Houses = new HouseRepository(Context);
             Patients = new PatientRepository(Context);
+            Procedures = new ProcedureRepository(Context);
+            ProcedureTypes = new ProcedureTypeRepository(Context);
             Streets = new StreetRepository(Context);
             Users = new UserRepository(Context);
         }

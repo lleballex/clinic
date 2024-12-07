@@ -8,13 +8,13 @@ namespace Clinic.View.Windows
     {
         private Action OnRepoChange;
 
-        public AppointmentFormWindow(Patient patient, Action onRepoChange)
+        public AppointmentFormWindow(Patient patient, Action onRepoChange, Procedure? procedure = null)
         {
             InitializeComponent();
 
             OnRepoChange = onRepoChange;
 
-            DataContext = new AppointmentFormVM(patient, OnSubmit, OnCancel);
+            DataContext = new AppointmentFormVM(patient, OnSubmit, OnCancel, procedure);
         }
 
         private void OnSubmit()

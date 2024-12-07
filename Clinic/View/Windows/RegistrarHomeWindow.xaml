@@ -9,10 +9,10 @@
         Style="{StaticResource Window}">
     <TabControl>
         <TabItem Header="Пациенты">
-            <controls:Patients />
+            <controls:Patients UserRole="Registrar" />
         </TabItem>
         <TabItem Header="Врачи">
-            <controls:Doctors />
+            <controls:Doctors UserRole="Registrar" />
         </TabItem>
     </TabControl>
 </Window>

@@ -1,6 +1,8 @@
 ﻿using Clinic.ViewModel.Utils;
 using DAL.Entities;
 using DAL.Repositories;
+using Npgsql;
+using System.Collections.ObjectModel;
 using System.Windows;
 
 namespace Clinic.ViewModel.Main
@@ -20,6 +22,11 @@ namespace Clinic.ViewModel.Main
             public string Recommendations { get; set; } = "";
         }
 
+        public class SelectedProcedure
+        {
+            public int TypeId { get; set; }
+        }
+
         private Repositories Repositories = Repositories.Instance;
 
         private Action OnSuccess;
@@ -32,6 +39,14 @@ namespace Clinic.ViewModel.Main
             OnCancel = onCancel;
 
             Diagnosises = Repositories.Diagnosises.FindAll();
+            ProcedureTypes = new ObservableCollection<ProcedureType>(Repositories.ProcedureTypes.FindAll());
+        }
+
+        private ObservableCollection<ProcedureType> _procedureTypes = [];
+        public ObservableCollection<ProcedureType> ProcedureTypes
+        {
+            get => _procedureTypes;
+            set { _procedureTypes = value; OnPropertyChanged(); }
         }
 
         private Appointment _appointment;
@@ -62,6 +77,13 @@ namespace Clinic.ViewModel.Main
             set { _form = value; OnPropertyChanged(); }
         }
 
+        private ObservableCollection<SelectedProcedure> _selectedProcedures = [];
+        public ObservableCollection<SelectedProcedure> SelectedProcedures
+        {
+            get => _selectedProcedures;
+            set { _selectedProcedures = value; OnPropertyChanged(); }
+        }
+
         private void UpdateComputed()
         {
             var computed = new ComputedClass();
@@ -83,16 +105,29 @@ namespace Clinic.ViewModel.Main
                 {
                     _submit = new RelayCommand(() =>
                     {
-                        Repositories.AppointmentsResults.Create(new AppointmentResult()
+                        Repositories.UseTransaction(() =>
                         {
-                            AppointmentId = Appointment.Id,
-                            DiagnosisId = Form.Diagnosis,
-                            DiagnosisDescription = Form.DiagnosisDescription,
-                            Recommendations = Form.Recommendations
+                            var appointmentResult = new AppointmentResult()
+                            {
+                                AppointmentId = Appointment.Id,
+                                DiagnosisId = Form.Diagnosis,
+                                DiagnosisDescription = Form.DiagnosisDescription,
+                                Recommendations = Form.Recommendations
+                            };
+                            Repositories.AppointmentsResults.Create(appointmentResult);
+                            Appointment.Status = AppointmentStatus.Finished;
+                            Repositories.Appointments.Update(Appointment);
+                            Repositories.SaveChanges();
+                            foreach (var procedure in SelectedProcedures)
+                            {
+                                Repositories.Procedures.Create(new Procedure()
+                                {
+                                    AssignedAppointmentId = Appointment.Id,
+                                    TypeId = procedure.TypeId,
+                                });
+                            }
+                            Repositories.SaveChanges();
                         });
-                        Appointment.Status = AppointmentStatus.Finished;
-                        Repositories.Appointments.Update(Appointment);
-                        Repositories.SaveChanges();
                         MessageBox.Show("Данные успешно сохранены");
                         OnSuccess();
                     });
@@ -113,5 +148,20 @@ namespace Clinic.ViewModel.Main
                 return _cancel;
             }
         }
+
+        private RelayCommand _addProcedure;
+        public RelayCommand AddProcedure => _addProcedure ??= new RelayCommand(() =>
+        {
+            SelectedProcedures.Add(new SelectedProcedure());
+        });
+
+        private RelayCommand _removeProcedure;
+        public RelayCommand RemoveProcedure => _removeProcedure ??= new RelayCommand((obj) =>
+        {
+            if (obj is SelectedProcedure procedure)
+            {
+                SelectedProcedures.Remove(procedure);
+            }
+        });
     }
 }

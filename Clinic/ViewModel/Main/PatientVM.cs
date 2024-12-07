@@ -31,7 +31,7 @@ namespace Clinic.ViewModel.Main
         private void LoadAppointments()
         {
             Appointments = [];
-            foreach (var appointment in Repositories.Appointments.FindByPatient(Patient.Id))
+            foreach (var appointment in Repositories.Appointments.FindAll(patientId: Patient.Id))
             {
                 Appointments.Add(new AppointmentCardVM(appointment, AppointmentCardVM.ForRoleEnum.Patient, () => LoadAppointments()));
             }

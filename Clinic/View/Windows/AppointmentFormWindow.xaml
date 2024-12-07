@@ -24,7 +24,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Style="{StaticResource Heading1}">Запись пациента на прием</TextBlock>
+        <TextBlock Grid.Row="0" Style="{StaticResource Heading1}" Text="{Binding WindowTitle}" />
 
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>

@@ -11,13 +11,30 @@ namespace Clinic.ViewModel.Main
         private Patient Patient;
         private Action OnSubmit;
         private Action OnCancel;
+        private Procedure? Procedure;
 
-        public AppointmentFormVM(Patient patient, Action onSubmit, Action onCancel)
+        public AppointmentFormVM(Patient patient, Action onSubmit, Action onCancel, Procedure? procedure = null)
         {
             OnSubmit = onSubmit;
             OnCancel = onCancel;
             Patient = patient;
             Specializations = Repositories.DoctorSpecializations.FindAll();
+            Procedure = procedure;
+
+            if (Procedure == null)
+            {
+                WindowTitle = "Запись пациента на прием";
+            } else
+            {
+                WindowTitle = $"Запись пациента на процедуру: {Procedure.Type.Name}";
+            }
+        }
+
+        private string _windowTitle;
+        public string WindowTitle
+        {
+            get => _windowTitle;
+            set { _windowTitle = value; OnPropertyChanged(); }
         }
 
         private List<DoctorSpecialization> _specializations = [];
@@ -122,7 +139,8 @@ namespace Clinic.ViewModel.Main
                             PatientId = Patient.Id,
                             DoctorId = FormDoctor.Value,
                             Status = AppointmentStatus.Created,
-                            Datetime = (FormDate.Value.Date + FormTime.Value.ToTimeSpan()).ToUniversalTime()
+                            Datetime = (FormDate.Value.Date + FormTime.Value.ToTimeSpan()).ToUniversalTime(),
+                            ProcedureId = Procedure?.Id
                         });
                         Repositories.SaveChanges();
                         MessageBox.Show("Данные успешно сохранены");

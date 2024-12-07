@@ -1,6 +1,7 @@
 ﻿using Clinic.ViewModel.Utils;
 using Clinic.View.Windows;
 using DAL.Entities;
+using System.Collections.ObjectModel;
 
 namespace Clinic.ViewModel.Base
 {
@@ -19,6 +20,7 @@ namespace Clinic.ViewModel.Base
             public string Status { get; set; }
             public string IsFinished { get; set; }
             public string IsCreated { get; set; }
+            public string HasProcedures { get; set; }
         }
 
         private ForRoleEnum ForRole;
@@ -26,9 +28,9 @@ namespace Clinic.ViewModel.Base
 
         public AppointmentCardVM(Appointment appointment, ForRoleEnum forRole, Action onAppointmentsChange)
         {
+            OnAppointmentsChange = onAppointmentsChange;
             ForRole = forRole;
             Appointment = appointment;
-            OnAppointmentsChange = onAppointmentsChange;
         }
 
         private Appointment _appointment;
@@ -43,6 +45,13 @@ namespace Clinic.ViewModel.Base
         {
             get => _computed;
             set { _computed= value; OnPropertyChanged(); }
+        }
+
+        private ObservableCollection<ProcedureCardVM> _procedures;
+        public ObservableCollection<ProcedureCardVM> Procedures
+        {
+            get => _procedures;
+            set { _procedures = value; OnPropertyChanged(); }
         }
 
         private void UpdateAppointmentComputedData()
@@ -77,8 +86,11 @@ namespace Clinic.ViewModel.Base
 
             computed.IsFinished = Appointment.Status == AppointmentStatus.Finished ? "Visible" : "Collapsed";
             computed.IsCreated = Appointment.Status == AppointmentStatus.Created ? "Visible" : "Collapsed";
+            computed.HasProcedures = Appointment.AssignedProcedures.Count > 0 ? "Visible" : "Collapsed";
 
             Computed = computed;
+
+            Procedures = new ObservableCollection<ProcedureCardVM>(Appointment.AssignedProcedures.Select(i => new ProcedureCardVM(i, Appointment.Patient, OnAppointmentsChange)));
         }
 
         private RelayCommand _onGoToResultForm;
