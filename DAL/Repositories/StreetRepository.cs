@@ -11,9 +11,28 @@ namespace DAL.Repositories
             Context = context;
         }
 
-        public List<Street> FindAll()
+        public List<Street> FindAll(string? query = null)
         {
-            return Context.Streets.ToList();
+            return Context.Streets
+                .OrderBy(i => i.Name)
+                .Where(i => (query == null || i.Name.Contains(query)))
+                .ToList();
+        }
+
+        public void Create(Street data)
+        {
+            Context.Streets.Add(data);
+        }
+
+        public void Update(Street data)
+        {
+            Context.ChangeTracker.Clear();
+            Context.Streets.Update(data);
+        }
+
+        public void Delete(Street data)
+        {
+            Context.Streets.Remove(data);
         }
     }
 }

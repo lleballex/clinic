@@ -66,6 +66,10 @@
             <Setter Property="FontWeight" Value="Bold" />
         </Style>
 
+        <Style TargetType="TextBlock" x:Key="Paragraph1" BasedOn="{StaticResource {x:Type TextBlock}}">
+            <Setter Property="FontSize" Value="16" />
+        </Style>
+
         <Style TargetType="TextBlock" x:Key="Paragraph3" BasedOn="{StaticResource {x:Type TextBlock}}">
             <Setter Property="FontSize" Value="12" />
         </Style>
