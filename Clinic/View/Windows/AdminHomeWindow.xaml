@@ -15,6 +15,24 @@
             <TabItem Header="Врачи">
                 <controls:Doctors UserRole="Admin" />
             </TabItem>
+            <TabItem Header="Улицы">
+                <controls:Streets />
+            </TabItem>
+            <TabItem Header="Дома">
+                <controls:Houses />
+            </TabItem>
+            <TabItem Header="Участки">
+                <controls:Departments />
+            </TabItem>
+            <TabItem Header="Специальности">
+                <controls:DoctorSpecializations />
+            </TabItem>
+            <TabItem Header="Диагнозы">
+                <controls:Diagnosises />
+            </TabItem>
+            <TabItem Header="Процедуры">
+                <controls:ProcedureTypes />
+            </TabItem>
         </TabControl>
     </Grid>
 </Window>
