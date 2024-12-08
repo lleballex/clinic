@@ -9,9 +9,7 @@ namespace Clinic
         {
             base.OnStartup(e);
 
-            (new DoctorHomeWindow()).Show();
-            (new AdminHomeWindow()).Show();
-            //(new RegistrarHomeWindow()).Show();
+            (new LoginWindow()).Show();
         }
     }
 }
