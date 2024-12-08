@@ -1,80 +1,29 @@
-using Clinic.ViewModels.Utils;
 using DAL.Entities;
+using System.Globalization;
+using System.Windows.Data;
 
-namespace Clinic.ViewModels.Controls
+namespace Clinic.View.Utils
 {
-    public class AppointmentCardVM : BaseVM
+    public class ProcedureStatusConverter : IValueConverter
     {
-        public enum ForRoleEnum
+        public object Convert(object obj, Type type, object obj2, CultureInfo info)
         {
-            Doctor, Patient
-        }
-
-        public class ComputedClass
-        {
-            public string Title { get; set; }
-            public string Date { get; set; }
-            public string Time { get; set; }
-            public string Status { get; set; }
-            public string IsFinished { get; set; }
-            public string IsCreated { get; set; }
-        }
-
-        private ForRoleEnum ForRole;
-
-        public AppointmentCardVM(Appointment appointment, ForRoleEnum forRole)
-        {
-            ForRole = forRole;
-            Appointment = appointment;
-        }
-
-        private Appointment _appointment;
-        public Appointment Appointment
-        {
-            get => _appointment;
-            set { _appointment = value; OnPropertyChanged(); UpdateAppointmentComputedData(); }
-        }
-
-        private ComputedClass _computed;
-        public ComputedClass Computed 
-        {
-            get => _computed;
-            set { _computed= value; OnPropertyChanged(); }
-        }
-
-        private void UpdateAppointmentComputedData()
-        {
-            var computed = new ComputedClass();
-
-            if (ForRole == ForRoleEnum.Doctor)
+            switch (obj)
             {
-                computed.Title = "";
+                case ProcedureStatus.Created:
+                    return "Запланирован";
+                case ProcedureStatus.Finished:
+                    return "Завершен";
+                case ProcedureStatus.Canceled:
+                    return "Отменен";
+                default:
+                    return "";
             }
-            else if (ForRole == ForRoleEnum.Patient)
-            {
-                computed.Title = Appointment.Doctor.Specialization.Name;
-            }
+        }
 
-            var localDatetime = TimeZoneInfo.ConvertTimeFromUtc(Appointment.Datetime, TimeZoneInfo.Local);
-            computed.Date = localDatetime.ToString("dd.MM.yyyy");
-            computed.Time = localDatetime.ToString("HH:mm") + " - " + (localDatetime.Add(Appointment.Doctor.AppointmentDuration.ToTimeSpan())).ToString("HH:mm");
-
-            switch (Appointment.Status)
-            {
-                case AppointmentStatus.Created:
-                    computed.Status = "Запланирован";
-                    break;
-                case AppointmentStatus.Finished:
-                    computed.Status = "Завершен";
-                    break;
-                case AppointmentStatus.Canceled:
-                    computed.Status = "Отменен";
-                    break;
-            }
-
-            computed.IsFinished = Appointment.Status == AppointmentStatus.Finished ? "Collapsed" : "Visible";
-
-            Computed = computed;
+        public object ConvertBack(object obj, Type type, object obj2, CultureInfo info)
+        {
+            throw new NotImplementedException();
         }
     }
 }

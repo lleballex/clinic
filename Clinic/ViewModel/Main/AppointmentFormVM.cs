@@ -110,12 +110,20 @@ namespace Clinic.ViewModel.Main
         private RelayCommand? _submit;
         public RelayCommand Submit => _submit ??= new RelayCommand(() =>
         {
+            var datetime = FormDate!.Value.Date + FormTime!.Value.ToTimeSpan();
+
+            if (datetime < DateTime.Now)
+            {
+                MessageBox.Show("Дата приема не может быть в прошлом");
+                return;
+            }
+
             Repositories.Instance.Appointments.Create(new Appointment()
             {
                 PatientId = Patient.Id,
                 DoctorId = FormDoctorId!.Value,
                 Status = AppointmentStatus.Created,
-                Datetime = (FormDate!.Value.Date + FormTime!.Value.ToTimeSpan()).ToUniversalTime(),
+                Datetime = datetime.ToUniversalTime(),
                 ProcedureId = Procedure?.Id
             });
             Repositories.Instance.SaveChanges();
