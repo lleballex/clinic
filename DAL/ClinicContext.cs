@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using DAL.Entities;
+using System.Configuration;
 
 namespace DAL
 {
@@ -21,8 +22,7 @@ namespace DAL
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            // TODO: move to config
-            optionsBuilder.UseNpgsql("Host=172.20.10.8;Port=5432;Username=leshalebedev;Database=clinic_new");
+            optionsBuilder.UseNpgsql(ConfigurationManager.AppSettings["DbConnectionString"]);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
