@@ -1,75 +1,83 @@
 ﻿using Clinic.ViewModel.Utils;
 using DAL.Entities;
 using DAL.Repositories;
+using System.Collections.ObjectModel;
 using System.Windows;
 
 namespace Clinic.ViewModel.Main
 {
     public class AppointmentFormVM : BaseVM
     {
-        private Repositories Repositories = Repositories.Instance;
         private Patient Patient;
-        private Action OnSubmit;
-        private Action OnCancel;
         private Procedure? Procedure;
+        private Action OnSuccess;
+        private Action OnCancel;
 
-        public AppointmentFormVM(Patient patient, Action onSubmit, Action onCancel, Procedure? procedure = null)
+        public AppointmentFormVM(Patient patient, Action onSuccess, Action onCancel, Procedure? procedure = null)
         {
-            OnSubmit = onSubmit;
+            OnSuccess = onSuccess;
             OnCancel = onCancel;
             Patient = patient;
-            Specializations = Repositories.DoctorSpecializations.FindAll();
             Procedure = procedure;
 
-            if (Procedure == null)
+            if (Procedure != null)
             {
-                WindowTitle = "Запись пациента на прием";
-            } else
-            {
-                WindowTitle = $"Запись пациента на процедуру: {Procedure.Type.Name}";
+                WindowTitle = "Запись пациента на процедуру";
             }
+
+            LoadSpecializations();
         }
 
-        private string _windowTitle;
+        #region computed
+
+        private string _windowTitle = "Запись пациента на прием";
         public string WindowTitle
         {
             get => _windowTitle;
             set { _windowTitle = value; OnPropertyChanged(); }
         }
 
-        private List<DoctorSpecialization> _specializations = [];
-        public List<DoctorSpecialization> Specializations
+        #endregion
+
+        #region store
+
+        private ObservableCollection<DoctorSpecialization> _specializations = [];
+        public ObservableCollection<DoctorSpecialization> Specializations
         {
             get => _specializations;
             set { _specializations = value; OnPropertyChanged(); }
         }
 
-        private List<DoctorProfile> _doctors = [];
-        public List<DoctorProfile> Doctors 
+        private ObservableCollection<DoctorProfile> _doctors = [];
+        public ObservableCollection<DoctorProfile> Doctors 
         {
             get => _doctors;
             set { _doctors = value; OnPropertyChanged(); }
         }
 
-        private List<TimeOnly> _timeSlots = [];
-        public List<TimeOnly> TimeSlots
+        private ObservableCollection<TimeOnly> _timeSlots = [];
+        public ObservableCollection<TimeOnly> TimeSlots
         {
             get => _timeSlots;
             set { _timeSlots = value; OnPropertyChanged(); }
         }
 
-        private int? _formSpecialization;
-        public int? FormSpecialization
+        #endregion
+
+        #region form
+
+        private int? _formSpecializationId;
+        public int? FormSpecializationId
         {
-            get => _formSpecialization;
-            set { _formSpecialization = value; OnPropertyChanged(); LoadDoctors(); }
+            get => _formSpecializationId;
+            set { _formSpecializationId = value; OnPropertyChanged(); LoadDoctors(); }
         }
 
-        private int? _formDoctor;
-        public int? FormDoctor
+        private int? _formDoctorId;
+        public int? FormDoctorId
         {
-            get => _formDoctor;
-            set { _formDoctor = value; OnPropertyChanged(); LoadTimeSlots(); }
+            get => _formDoctorId;
+            set { _formDoctorId = value; OnPropertyChanged(); LoadTimeSlots(); }
         }
 
         private DateTime? _formDate;
@@ -86,81 +94,62 @@ namespace Clinic.ViewModel.Main
             set { _formTime = value; OnPropertyChanged(); }
         }
 
+        #endregion
+
+        #region commands
+
+        private RelayCommand? _selectTimeSlot;
+        public RelayCommand SelectTimeSlot => _selectTimeSlot ??= new RelayCommand((obj) =>
+        {
+            if (obj is TimeOnly)
+            {
+                FormTime = (TimeOnly)obj;
+            }
+        });
+
+        private RelayCommand? _submit;
+        public RelayCommand Submit => _submit ??= new RelayCommand(() =>
+        {
+            Repositories.Instance.Appointments.Create(new Appointment()
+            {
+                PatientId = Patient.Id,
+                DoctorId = FormDoctorId!.Value,
+                Status = AppointmentStatus.Created,
+                Datetime = (FormDate!.Value.Date + FormTime!.Value.ToTimeSpan()).ToUniversalTime(),
+                ProcedureId = Procedure?.Id
+            });
+            Repositories.Instance.SaveChanges();
+            MessageBox.Show("Данные успешно сохранены");
+            OnSuccess();
+        }, () => FormDoctorId != null && FormDate != null && FormTime != null);
+
+        private RelayCommand? _cancel;
+        public RelayCommand Cancel => _cancel ??= new RelayCommand(OnCancel);
+
+        #endregion
+
+        private void LoadSpecializations()
+        {
+            Specializations = new ObservableCollection<DoctorSpecialization>(Repositories.Instance.DoctorSpecializations.FindAll());
+        }
+
         private void LoadDoctors()
         {
-            FormDoctor = null;
-            Doctors = Repositories.DoctorProfiles.FindAll(departmentId: Patient.House.DepartmentId, specializationId: FormSpecialization);
+            Doctors = new ObservableCollection<DoctorProfile>(Repositories.Instance.DoctorProfiles.FindAll(
+                departmentId: Patient.House.DepartmentId,
+                specializationId: FormSpecializationId
+            ));
         }
 
         private void LoadTimeSlots()
         {
             FormTime = null;
-            if (FormDoctor.HasValue && FormDate.HasValue)
+            if (FormDoctorId != null && FormDate != null)
             {
-                TimeSlots = Repositories.DoctorProfiles.FindFreeTimeSlots(FormDoctor.Value, DateOnly.FromDateTime(FormDate.Value));
-            }
-        }
-
-        private RelayCommand _selectTimeSlot;
-        public RelayCommand SelectTimeSlot
-        {
-            get
-            {
-                if (_selectTimeSlot == null)
-                {
-                    _selectTimeSlot = new RelayCommand((obj) =>
-                    {
-                        if (obj is TimeOnly)
-                        {
-                            FormTime = (TimeOnly)obj;
-                        }
-                    });
-                }
-                return _selectTimeSlot;
-            }
-        }
-
-        private RelayCommand _submit;
-        public RelayCommand Submit
-        {
-            get
-            {
-                if (_submit == null)
-                {
-                    _submit = new RelayCommand(() =>
-                    {
-                        if (!FormDoctor.HasValue || !FormDate.HasValue || !FormTime.HasValue)
-                        {
-                            return;
-                        }
-
-                        Repositories.Appointments.Create(new Appointment()
-                        {
-                            PatientId = Patient.Id,
-                            DoctorId = FormDoctor.Value,
-                            Status = AppointmentStatus.Created,
-                            Datetime = (FormDate.Value.Date + FormTime.Value.ToTimeSpan()).ToUniversalTime(),
-                            ProcedureId = Procedure?.Id
-                        });
-                        Repositories.SaveChanges();
-                        MessageBox.Show("Данные успешно сохранены");
-                        OnSubmit();
-                    });
-                }
-                return _submit;
-            }
-        }
-
-        private RelayCommand _cancel;
-        public RelayCommand Cancel
-        {
-            get
-            {
-                if (_cancel == null)
-                {
-                    _cancel = new RelayCommand(() => OnCancel());
-                }
-                return _cancel;
+                TimeSlots = new ObservableCollection<TimeOnly>(Repositories.Instance.DoctorProfiles.FindFreeTimeSlots(
+                    doctorId: FormDoctorId.Value,
+                    date: DateOnly.FromDateTime(FormDate.Value)
+                ));
             }
         }
     }

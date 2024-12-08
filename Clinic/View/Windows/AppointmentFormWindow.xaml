@@ -5,106 +5,93 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Clinic.View.Windows"
         mc:Ignorable="d"
-        Style="{StaticResource Window}" Width="650" Height="Auto" SizeToContent="Height">
+        Style="{StaticResource Window}" Width="700" Height="Auto" SizeToContent="Height">
     <Window.Resources>
         <Style x:Key="FieldLabel" TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
             <Setter Property="Margin" Value="0,0,0,8" />
         </Style>
         <local:AConverter x:Key="aConverter" />
     </Window.Resources>
-    
-    <Grid Margin="16">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="16" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="16" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="16" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Style="{StaticResource Heading1}" Text="{Binding WindowTitle}" />
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="16,16,16,0">
+            <TextBlock Margin="0,0,0,16" Style="{StaticResource Heading1}" Text="{Binding WindowTitle}" />
 
-        <Grid Grid.Row="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="16" />
-                <ColumnDefinition Width="1*" />
-            </Grid.ColumnDefinitions>
-            <StackPanel Grid.Column="0">
-                <Label Style="{StaticResource FieldLabel}">Специальность врача</Label>
-                <ComboBox ItemsSource="{Binding Specializations}" DisplayMemberPath="Name" SelectedValuePath="Id" SelectedValue="{Binding FormSpecialization}" />
-            </StackPanel>
-            <StackPanel Grid.Column="2">
-                <Label Style="{StaticResource FieldLabel}">Врач</Label>
-                <ComboBox ItemsSource="{Binding Doctors}" SelectedValuePath="Id" SelectedValue="{Binding FormDoctor}">
-                    <ComboBox.ItemTemplate>
+            <Grid Margin="0,0,0,16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="16" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                    <Label Style="{StaticResource FieldLabel}">Специальность врача</Label>
+                    <ComboBox ItemsSource="{Binding Specializations}" DisplayMemberPath="Name" SelectedValuePath="Id" SelectedValue="{Binding FormSpecializationId}" />
+                </StackPanel>
+                <StackPanel Grid.Column="2">
+                    <Label Style="{StaticResource FieldLabel}">Врач</Label>
+                    <ComboBox ItemsSource="{Binding Doctors}" SelectedValuePath="Id" SelectedValue="{Binding FormDoctorId}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock>
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}{0} {1} {2}">
+                                            <Binding Path="User.Surname" />
+                                            <Binding Path="User.Name" />
+                                            <Binding Path="User.Patronymic" />
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
+            </Grid>
+
+            <Grid Margin="0,0,0,16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="16" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Calendar Grid.Column="0" SelectedDate="{Binding FormDate}" />
+                <!--TODO: width-->
+                <ItemsControl Grid.Column="2" ItemsSource="{Binding TimeSlots}" Width="450">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock>
-                                <TextBlock.Text>
-                                    <MultiBinding StringFormat="{}{0} {1} {2}">
-                                        <Binding Path="User.Surname" />
-                                        <Binding Path="User.Name" />
-                                        <Binding Path="User.Patronymic" />
-                                    </MultiBinding>
-                                </TextBlock.Text>
-                            </TextBlock>
+                            <Border Background="{StaticResource White}" CornerRadius="16" BorderThickness="1" Margin="0,0,8,8">
+                                <Border.Style>
+                                    <Style TargetType="Border">
+                                        <Style.Triggers>
+                                            <DataTrigger Value="true">
+                                                <DataTrigger.Binding>
+                                                    <MultiBinding Converter="{StaticResource aConverter}">
+                                                        <Binding />
+                                                        <Binding Path="DataContext.FormTime" RelativeSource="{RelativeSource AncestorType=ItemsControl}" />
+                                                    </MultiBinding>
+                                                </DataTrigger.Binding>
+                                                <Setter Property="BorderBrush" Value="{StaticResource Gray2}" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Border.Style>
+                                <Button Padding="8" Command="{Binding DataContext.SelectTimeSlot, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}">
+                                    <TextBlock Style="{StaticResource Paragraph3}" Text="{Binding}" />
+                                </Button>
+                            </Border>
                         </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Grid>
+
+            <StackPanel Margin="0,0,0,16" Orientation="Horizontal">
+                <Button Style="{StaticResource PrimaryButton}" Command="{Binding Submit}">Сохранить</Button>
+                <Button Margin="16,0,0,0" Style="{StaticResource SecondaryButton}" Command="{Binding Cancel}" >Отменить</Button>
             </StackPanel>
-        </Grid>
-
-        <Grid Grid.Row="4">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="16" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <Calendar Grid.Column="0" SelectedDate="{Binding FormDate}" />
-            <!--TODO: width-->
-            <ItemsControl Grid.Column="2" ItemsSource="{Binding TimeSlots}" Width="400">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Border Background="{StaticResource White}" CornerRadius="16" BorderThickness="1" Margin="0,0,8,8">
-                            <Border.Style>
-                                <Style TargetType="Border">
-                                    <Style.Triggers>
-                                        <DataTrigger Value="true">
-                                            <DataTrigger.Binding>
-                                                <MultiBinding Converter="{StaticResource aConverter}">
-                                                    <Binding />
-                                                    <Binding Path="DataContext.FormTime" RelativeSource="{RelativeSource AncestorType=ItemsControl}" />
-                                                </MultiBinding>
-                                            </DataTrigger.Binding>
-                                            <Setter Property="BorderBrush" Value="{StaticResource Gray2}" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Border.Style>
-                            <Button Padding="8" Command="{Binding DataContext.SelectTimeSlot, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}">
-                                <TextBlock Style="{StaticResource Paragraph3}" Text="{Binding}" />
-                            </Button>
-                        </Border>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </Grid>
-
-        <Grid Grid.Row="6">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="16" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Style="{StaticResource SecondaryButton}" Width="110" Command="{Binding Cancel}" >Отменить</Button>
-            <Button Grid.Column="2" Style="{StaticResource PrimaryButton}" Width="110" Command="{Binding Submit}">Записать</Button>
-        </Grid>
-    </Grid>
+        </StackPanel>
+    </ScrollViewer>
 </Window>
