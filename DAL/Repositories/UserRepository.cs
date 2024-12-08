@@ -23,6 +23,12 @@ namespace DAL.Repositories
             Context.Users.Add(data);
         }
 
+        public void Update(User data)
+        {
+            Context.ChangeTracker.Clear();
+            Context.Users.Update(data);
+        }
+
         public void Delete(User data)
         {
             Context.Users.Remove(data);

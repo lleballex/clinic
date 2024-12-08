@@ -7,201 +7,184 @@
         xmlns:entities="clr-namespace:DAL.Entities;assembly=DAL" 
         xmlns:utils="clr-namespace:Clinic.View.Utils"
         mc:Ignorable="d"
-        Style="{StaticResource Window}" Width="700" Height="Auto" SizeToContent="Height">
+        Style="{StaticResource Window}" Width="700" Height="800">
     <Window.Resources>
         <Style x:Key="FieldLabel" TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
             <Setter Property="Margin" Value="0,0,0,8" />
         </Style>
 
-        <utils:DoctorFormModelWorkDayIsWeekendConverter x:Key="DoctorFormModelWorkDayIsWeekendConverter" />
-        <utils:DoctorFormModelWorkDayIsNotWeekendConverter x:Key="DoctorFormModelWorkDayIsNotWeekendConverter" />
+        <utils:IsVisibleConverter x:Key="IsVisibleConverter" />
+        <utils:IsNotVisibleConverter x:Key="IsNotVisibleConverter" />
+        <utils:DoctorWorkDayWeekDayConverter x:Key="DoctorWorkDayWeekDayConverter" />
     </Window.Resources>
 
-    <Grid Margin="16">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="16" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="16" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="16" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="16" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="16" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="16" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="16" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="16" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="16,16,16,0">
+            <TextBlock Margin="0,0,0,16" Style="{StaticResource Heading1}" Text="{Binding WindowTitle}" />
 
-        <TextBlock Grid.Row="0" Style="{StaticResource Heading1}" Text="{Binding WindowTitle}" />
+            <Grid Margin="0,0,0,16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="16" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="16" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                    <Label Style="{StaticResource FieldLabel}">Фамилия</Label>
+                    <TextBox Text="{Binding FormSurname, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+                <StackPanel Grid.Column="2">
+                    <Label Style="{StaticResource FieldLabel}">Имя</Label>
+                    <TextBox Text="{Binding FormName, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+                <StackPanel Grid.Column="4">
+                    <Label Style="{StaticResource FieldLabel}">Отчество</Label>
+                    <TextBox Text="{Binding FormPatronymic, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+            </Grid>
 
-        <Grid Grid.Row="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="16" />
-                <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="16" />
-                <ColumnDefinition Width="1*" />
-            </Grid.ColumnDefinitions>
-            <StackPanel Grid.Column="0">
-                <Label Style="{StaticResource FieldLabel}">Фамилия</Label>
-                <TextBox Text="{Binding DoctorFormModel.Surname}" />
-            </StackPanel>
-            <StackPanel Grid.Column="2">
-                <Label Style="{StaticResource FieldLabel}">Имя</Label>
-                <TextBox Text="{Binding DoctorFormModel.Name}" />
-            </StackPanel>
-            <StackPanel Grid.Column="4">
-                <Label Style="{StaticResource FieldLabel}">Отчество</Label>
-                <TextBox Text="{Binding DoctorFormModel.Patronymic}" />
-            </StackPanel>
-        </Grid>
+            <Grid Margin="0,0,0,16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="16" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                    <Label Style="{StaticResource FieldLabel}">Email</Label>
+                    <TextBox Text="{Binding FormEmail, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+                <StackPanel Grid.Column="2">
+                    <Label Style="{StaticResource FieldLabel}">Пароль</Label>
+                    <TextBox Text="{Binding FormPassword, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+            </Grid>
 
-        <Grid Grid.Row="4">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="16" />
-                <ColumnDefinition Width="1*" />
-            </Grid.ColumnDefinitions>
-            <StackPanel Grid.Column="0">
-                <Label Style="{StaticResource FieldLabel}">Email</Label>
-                <TextBox Text="{Binding DoctorFormModel.Email}" />
-            </StackPanel>
-            <StackPanel Grid.Column="2">
-                <Label Style="{StaticResource FieldLabel}">Пароль</Label>
-                <TextBox Text="{Binding DoctorFormModel.Password}" />
-            </StackPanel>
-        </Grid>
+            <Grid Margin="0,0,0,16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="16" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                    <Label Style="{StaticResource FieldLabel}">Пол</Label>
+                    <ComboBox SelectedValue="{Binding FormGender}" SelectedValuePath="Tag">
+                        <ComboBoxItem Tag="{x:Static entities:UserGender.Male}">Мужской</ComboBoxItem>
+                        <ComboBoxItem Tag="{x:Static entities:UserGender.Female}">Женский</ComboBoxItem>
+                    </ComboBox>
+                </StackPanel>
+                <StackPanel Grid.Column="2">
+                    <Label Style="{StaticResource FieldLabel}">Дата рождения</Label>
+                    <DatePicker SelectedDate="{Binding FormBornAt}" />
+                </StackPanel>
+            </Grid>
 
-        <Grid Grid.Row="6">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="16" />
-                <ColumnDefinition Width="1*" />
-            </Grid.ColumnDefinitions>
-            <StackPanel Grid.Column="0">
-                <Label Style="{StaticResource FieldLabel}">Пол</Label>
-                <ComboBox SelectedValue="{Binding DoctorFormModel.Gender}" SelectedValuePath="Tag">
-                    <ComboBoxItem Tag="{x:Static entities:UserGender.Male}">Мужской</ComboBoxItem>
-                    <ComboBoxItem Tag="{x:Static entities:UserGender.Female}">Женский</ComboBoxItem>
-                </ComboBox>
-            </StackPanel>
-            <StackPanel Grid.Column="2">
-                <Label Style="{StaticResource FieldLabel}">Дата рождения</Label>
-                <DatePicker SelectedDate="{Binding DoctorFormModel.BornAt}" />
-            </StackPanel>
-        </Grid>
+            <Grid Margin="0,0,0,16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="16" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                    <Label Style="{StaticResource FieldLabel}">Специализация</Label>
+                    <ComboBox SelectedValue="{Binding FormSpecializationId}" SelectedValuePath="Id" DisplayMemberPath="Name" ItemsSource="{Binding Specializations}" />
+                </StackPanel>
+                <StackPanel Grid.Column="2">
+                    <Label Style="{StaticResource FieldLabel}">Участок</Label>
+                    <ComboBox SelectedValue="{Binding FormDepartmentId}" SelectedValuePath="Id" DisplayMemberPath="Number" ItemsSource="{Binding Departments}" />
+                </StackPanel>
+            </Grid>
 
-        <Grid Grid.Row="8">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="16" />
-                <ColumnDefinition Width="1*" />
-            </Grid.ColumnDefinitions>
-            <StackPanel Grid.Column="0">
-                <Label Style="{StaticResource FieldLabel}">Специализация</Label>
-                <ComboBox SelectedValue="{Binding DoctorFormModel.SpecializationId}" SelectedValuePath="Id" DisplayMemberPath="Name" ItemsSource="{Binding Specializations}" />
-            </StackPanel>
-            <StackPanel Grid.Column="2">
-                <Label Style="{StaticResource FieldLabel}">Участок</Label>
-                <ComboBox SelectedValue="{Binding DoctorFormModel.DepartmentId}" SelectedValuePath="Id" DisplayMemberPath="Number" ItemsSource="{Binding Departments}" />
-            </StackPanel>
-        </Grid>
+            <Grid Margin="0,0,0,16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="16" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                    <Label Style="{StaticResource FieldLabel}">Длительность приема (часы)</Label>
+                    <TextBox Text="{Binding FormAppointmentDurationHours, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+                <StackPanel Grid.Column="2">
+                    <Label Style="{StaticResource FieldLabel}">Длительность приема (минуты)</Label>
+                    <TextBox Text="{Binding FormAppointmentDurationMinutes, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+            </Grid>
 
-        <Grid Grid.Row="10">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="16" />
-                <ColumnDefinition Width="1*" />
-            </Grid.ColumnDefinitions>
-            <StackPanel Grid.Column="0">
-                <Label Style="{StaticResource FieldLabel}">Длительность приема (часы)</Label>
-                <TextBox Text="{Binding SelectedHours}" />
-            </StackPanel>
-            <StackPanel Grid.Column="2">
-                <Label Style="{StaticResource FieldLabel}">Длительность приема (минуты)</Label>
-                <TextBox Text="{Binding SelectedMinutes}" />
-            </StackPanel>
-        </Grid>
+            <TextBlock Margin="0,0,0,16" Style="{StaticResource Heading4}">Расписание</TextBlock>
 
-        <TextBlock Grid.Row="12" Style="{StaticResource Heading4}">Расписание</TextBlock>
-
-        <ItemsControl Grid.Row="14" ItemsSource="{Binding FormWorkDays}" Margin="0,0,0,-16">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Margin="0,0,0,16" >
-                    <Grid Visibility="{Binding Converter={StaticResource DoctorFormModelWorkDayIsNotWeekendConverter}}">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="16" />
-                            <ColumnDefinition Width="1*" />
-                            <ColumnDefinition Width="16" />
-                            <ColumnDefinition Width="1*" />
-                            <ColumnDefinition Width="16" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="{Binding WeekDay}" VerticalAlignment="Center" />
-                        <StackPanel Grid.Column="2">
-                            <Label Style="{StaticResource FieldLabel}">Начало (чч:мм)</Label>
-                            <Grid HorizontalAlignment="Stretch">
+            <ItemsControl ItemsSource="{Binding FormWorkDays}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Margin="0,0,0,16" >
+                            <Grid Visibility="{Binding IsWeekend, Converter={StaticResource IsNotVisibleConverter}}">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1*" />
-                                    <ColumnDefinition Width="8" />
                                     <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="8" />
+                                    <ColumnDefinition Width="16" />
                                     <ColumnDefinition Width="1*" />
+                                    <ColumnDefinition Width="16" />
+                                    <ColumnDefinition Width="1*" />
+                                    <ColumnDefinition Width="16" />
+                                    <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <TextBox Grid.Column="0" Text="{Binding StartedAtHours}" />
-                                <TextBlock Grid.Column="2" VerticalAlignment="Center">:</TextBlock>
-                                <TextBox Grid.Column="4" Text="{Binding StartedAtMinutes}" />
+                                <TextBlock Grid.Column="0" Text="{Binding WeekDay, Converter={StaticResource DoctorWorkDayWeekDayConverter}}" VerticalAlignment="Center" />
+                                <StackPanel Grid.Column="2">
+                                    <Label Style="{StaticResource FieldLabel}">Начало (чч:мм)</Label>
+                                    <Grid HorizontalAlignment="Stretch">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="8" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="8" />
+                                            <ColumnDefinition Width="1*" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox Grid.Column="0" Text="{Binding StartedAtHours, UpdateSourceTrigger=PropertyChanged}" />
+                                        <TextBlock Grid.Column="2" VerticalAlignment="Center">:</TextBlock>
+                                        <TextBox Grid.Column="4" Text="{Binding StartedAtMinutes, UpdateSourceTrigger=PropertyChanged}" />
+                                    </Grid>
+                                </StackPanel>
+                                <StackPanel Grid.Column="4">
+                                    <Label Style="{StaticResource FieldLabel}">Окончание (чч:мм)</Label>
+                                    <Grid HorizontalAlignment="Stretch">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="8" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="8" />
+                                            <ColumnDefinition Width="1*" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox Grid.Column="0" Text="{Binding EndedAtHours, UpdateSourceTrigger=PropertyChanged}" />
+                                        <TextBlock Grid.Column="2" VerticalAlignment="Center">:</TextBlock>
+                                        <TextBox Grid.Column="4" Text="{Binding EndedAtMinutes, UpdateSourceTrigger=PropertyChanged}" />
+                                    </Grid>
+                                </StackPanel>
+                                <Button Grid.Column="6" Style="{StaticResource SecondaryButton}" VerticalAlignment="Center" Command="{Binding DataContext.MakeWorkDayWeekend, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}">
+                                    Сделать выходным
+                                </Button>
+                            </Grid>
+                            <Grid Visibility="{Binding IsWeekend, Converter={StaticResource IsVisibleConverter}}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="16" />
+                                    <ColumnDefinition Width="1*" />
+                                    <ColumnDefinition Width="16" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="{Binding WeekDay, Converter={StaticResource DoctorWorkDayWeekDayConverter}}" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="2" Margin="0,0,16,0" VerticalAlignment="Center" TextAlignment="Center">Выходной</TextBlock>
+                                <Button Grid.Column="4" Style="{StaticResource SecondaryButton}" VerticalAlignment="Center" Command="{Binding DataContext.MakeWorkDayNotWeekend, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}">
+                                    Сделать рабочим днем
+                                </Button>
                             </Grid>
                         </StackPanel>
-                        <StackPanel Grid.Column="4">
-                            <Label Style="{StaticResource FieldLabel}">Окончание (чч:мм)</Label>
-                            <Grid HorizontalAlignment="Stretch">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1*" />
-                                    <ColumnDefinition Width="8" />
-                                    <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="8" />
-                                        <ColumnDefinition Width="1*" />
-                                    </Grid.ColumnDefinitions>
-                                    <TextBox Grid.Column="0" Text="{Binding EndedAtHours}" />
-                                    <TextBlock Grid.Column="2" VerticalAlignment="Center">:</TextBlock>
-                                    <TextBox Grid.Column="4" Text="{Binding EndedAtMinutes}" />
-                                </Grid>
-                            </StackPanel>
-                            <Button Grid.Column="6" Style="{StaticResource SecondaryButton}" VerticalAlignment="Center" Command="{Binding DataContext.MakeWorkDayWeekend, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}">
-                                Сделать выходным
-                            </Button>
-                        </Grid>
-                        <Grid Visibility="{Binding Converter={StaticResource DoctorFormModelWorkDayIsWeekendConverter}}">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="16" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="1*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="{Binding WeekDay}" VerticalAlignment="Center" />
-                            <TextBlock Grid.Column="2" Margin="0,0,16,0" VerticalAlignment="Center">Выходной</TextBlock>
-                            <Button Grid.Column="4" Style="{StaticResource SecondaryButton}" VerticalAlignment="Center" Command="{Binding DataContext.MakeWorkDayNotWeekend, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}">
-                                Сделать рабочим днем
-                            </Button>
-                        </Grid>
-                    </StackPanel>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
 
-        <StackPanel Grid.Row="16" Orientation="Horizontal">
-            <Button Style="{StaticResource SecondaryButton}" Width="110" Command="{Binding Cancel}">Отменить</Button>
-            <Button Margin="16,0,0,0" Style="{StaticResource PrimaryButton}" Width="110" Command="{Binding Submit}">Сохранить</Button>
+            <StackPanel Margin="0,0,0,16" Orientation="Horizontal">
+                <Button Margin="0,0,16,0" Style="{StaticResource PrimaryButton}" Width="110" Command="{Binding Submit}">Сохранить</Button>
+                <Button Style="{StaticResource SecondaryButton}" Width="110" Command="{Binding Cancel}">Отменить</Button>
+            </StackPanel>
         </StackPanel>
-    </Grid>
+    </ScrollViewer>
 </Window>

@@ -15,5 +15,18 @@ namespace DAL.Repositories
         {
             Context.DoctorWorkDays.Add(data);
         }
+
+        public void Update(DoctorWorkDay data)
+        {
+            Context.ChangeTracker.Clear();
+            Context.DoctorWorkDays.Update(data);
+        }
+
+        public void Delete(DoctorWorkDay data)
+        {
+            // TODO: fix and remove
+            Context.ChangeTracker.Clear();
+            Context.DoctorWorkDays.Remove(data);
+        }
     }
 }

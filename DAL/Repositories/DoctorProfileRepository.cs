@@ -32,6 +32,12 @@ namespace DAL.Repositories
             Context.DoctorProfiles.Add(data);
         }
 
+        public void Update(DoctorProfile data)
+        {
+            Context.ChangeTracker.Clear();
+            Context.DoctorProfiles.Update(data);
+        }
+
         // TODO: move somewhere
         public List<TimeOnly> FindFreeTimeSlots(int doctorId, DateOnly date)
         {

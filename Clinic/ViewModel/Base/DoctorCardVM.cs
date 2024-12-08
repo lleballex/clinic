@@ -1,4 +1,5 @@
 ﻿using Clinic.Model;
+using Clinic.View.Windows;
 using Clinic.ViewModel.Utils;
 using DAL.Entities;
 using DAL.Repositories;
@@ -51,7 +52,7 @@ namespace Clinic.ViewModel.Base
         private RelayCommand? _updateDoctor;
         public RelayCommand UpdateDoctor => _updateDoctor ??= new RelayCommand(() =>
         {
-            // TODO: implement
+            (new DoctorFormWindow(doctor: Doctor, onRepoChange: OnRepoChange)).ShowDialog();
         });
 
         private RelayCommand? _deleteDoctor;
