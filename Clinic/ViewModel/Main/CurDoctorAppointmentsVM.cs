@@ -25,11 +25,11 @@ namespace Clinic.ViewModel.Main
 
         #region form
 
-        private DateTime _selectedDate = DateTime.Now;
-        public DateTime SelectedDate
+        private DateTime _formDate = DateTime.Now;
+        public DateTime FormDate
         {
-            get => _selectedDate;
-            set { _selectedDate = value; OnPropertyChanged(); LoadAppointments(); }
+            get => _formDate;
+            set { _formDate = value; OnPropertyChanged(); LoadAppointments(); }
         }
 
         #endregion
@@ -37,7 +37,7 @@ namespace Clinic.ViewModel.Main
         private void LoadAppointments()
         {
             Appointments = new ObservableCollection<AppointmentCardVM>(Repositories.Instance.Appointments
-                .FindAll(doctorId: Store.Instance.CurUser.Doctor.Id, date: DateOnly.FromDateTime(SelectedDate))
+                .FindAll(doctorId: Store.Instance.CurUser.Doctor.Id, date: DateOnly.FromDateTime(FormDate))
                 .Select(i => new AppointmentCardVM(i, AppointmentCardVM.ForRoleEnum.Doctor, LoadAppointments))
                 .ToList());
         }
