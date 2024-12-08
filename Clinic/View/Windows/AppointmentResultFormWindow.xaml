@@ -15,7 +15,7 @@
         </Style>
     </Window.Resources>
 
-    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="16,16,16,0">
             <TextBlock Style="{StaticResource Heading1}" Margin="0,0,0,16" Text="{Binding WindowTitle}" />
 
@@ -26,12 +26,12 @@
 
             <StackPanel Margin="0,0,0,16">
                 <Label Style="{StaticResource FieldLabel}">Описание диагноза</Label>
-                <TextBox Text="{Binding FormDiagnosisDescription}" />
+                <TextBox Text="{Binding FormDiagnosisDescription}" TextWrapping="Wrap" />
             </StackPanel>
 
             <StackPanel Margin="0,0,0,16">
                 <Label Style="{StaticResource FieldLabel}">Рекомендации</Label>
-                <TextBox Text="{Binding FormRecommendations, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox Text="{Binding FormRecommendations, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap"  />
             </StackPanel>
 
             <TextBlock Visibility="{Binding IsProcedure, Converter={StaticResource IsNotVisibleConverter}}" Style="{StaticResource Heading4}" Margin="0,0,0,16">Процедуры</TextBlock>

@@ -32,7 +32,7 @@
                 </Border>
             </Grid>
 
-            <TextBlock Visibility="{Binding Procedure.Appointment, Converter={StaticResource IsAppointmentFinishedConverter}}" Margin="0,0,0,16">
+            <TextBlock Visibility="{Binding Procedure.Appointment, Converter={StaticResource IsAppointmentFinishedConverter}}" Margin="0,0,0,16" TextWrapping="Wrap">
                 <TextBlock.Text>
                     <MultiBinding StringFormat="Диагноз: {0}. {1}">
                         <Binding Path="Procedure.Appointment.Result.Diagnosis.Name" />
@@ -41,7 +41,7 @@
                 </TextBlock.Text>
             </TextBlock>
 
-            <TextBlock Margin="0,0,0,16" Visibility="{Binding RecommendationsExist, Converter={StaticResource IsVisibleConverter}}" Text="{Binding Procedure.Appointment.Result.Recommendations}" />
+            <TextBlock Margin="0,0,0,16" TextWrapping="Wrap" Visibility="{Binding RecommendationsExist, Converter={StaticResource IsVisibleConverter}}" Text="{Binding Procedure.Appointment.Result.Recommendations}" />
 
             <Button Margin="0,0,0,16" Visibility="{Binding Procedure, Converter={StaticResource IsProcedureWithoutAppointment}}" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Left" Command="{Binding MakeAppointment}">Записать</Button>
         </StackPanel>
