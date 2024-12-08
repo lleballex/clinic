@@ -2,17 +2,18 @@
 using Clinic.ViewModel.Utils;
 using DAL.Entities;
 using DAL.Repositories;
+using System.Collections.ObjectModel;
 
 namespace Clinic.ViewModel.Main
 {
     public class PatientVM : BaseVM
     {
-        private Repositories Repositories = Repositories.Instance;
-
         public PatientVM(Patient patient)
         {
             Patient = patient;
         }
+
+        #region store
 
         private Patient _patient;
         public Patient Patient
@@ -21,20 +22,24 @@ namespace Clinic.ViewModel.Main
             set { _patient = value; OnPropertyChanged(); LoadAppointments();  }
         }
 
-        private List<AppointmentCardVM> _appointments;
-        public List<AppointmentCardVM> Appointments
+        private ObservableCollection<AppointmentCardVM> _appointments;
+        public ObservableCollection<AppointmentCardVM> Appointments
         {
             get => _appointments;
             set { _appointments = value; OnPropertyChanged(); }
         }
 
+        #endregion
+
         private void LoadAppointments()
         {
-            Appointments = [];
-            foreach (var appointment in Repositories.Appointments.FindAll(patientId: Patient.Id))
-            {
-                Appointments.Add(new AppointmentCardVM(appointment, AppointmentCardVM.ForRoleEnum.Patient, () => LoadAppointments()));
-            }
+            Appointments = new ObservableCollection<AppointmentCardVM>(Repositories.Instance.Appointments
+                .FindAll(patientId: Patient.Id).Select(i => new AppointmentCardVM(
+                    appointment: i,
+                    forRole: AppointmentCardVM.ForRoleEnum.Patient,
+                    onRepoChange: LoadAppointments
+                ))
+                .ToList());
         }
     }
 }

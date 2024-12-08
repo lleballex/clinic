@@ -5,23 +5,42 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Clinic.View.Windows"
         xmlns:controls="clr-namespace:Clinic.View.Controls"
+        xmlns:utils="clr-namespace:Clinic.View.Utils"
         mc:Ignorable="d"
         Style="{StaticResource Window}">
-    <ScrollViewer>
-        <Grid Margin="16">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="16" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
+    <Window.Resources>
+        <utils:DateToLocalTimeZoneConverter x:Key="DateToLocalTimeZoneConverter" />
+    </Window.Resources>
 
-            <TextBlock Grid.Row="0" Style="{StaticResource Heading1}">
-                <TextBlock Text="{Binding Patient.Surname}" />
-                <TextBlock Text="{Binding Patient.Name}" />
-                <TextBlock Text="{Binding Patient.Patronymic}" />
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+        <StackPanel Margin="16,16,16,0">
+            <TextBlock Margin="0,0,0,16" Style="{StaticResource Heading1}">
+                <TextBlock.Text>
+                    <MultiBinding StringFormat="{}{0} {1} {2}">
+                        <Binding Path="Patient.Surname" />
+                        <Binding Path="Patient.Name" />
+                        <Binding Path="Patient.Patronymic" />
+                    </MultiBinding>
+                </TextBlock.Text>
             </TextBlock>
 
-            <StackPanel Grid.Row="2">
+            <TextBlock Margin="0,0,0,16" Text="{Binding Patient.BornAt, Converter={StaticResource DateToLocalTimeZoneConverter}, StringFormat='Дата рождения: {0:dd.MM.yyyy}'}" />
+
+            <TextBlock Margin="0,0,0,16" Text="{Binding Patient.PhoneNumber, StringFormat='Номер телефона: {0}'}" />
+
+            <TextBlock Margin="0,0,0,16" Text="{Binding Patient.MedicalPolicyNumber, StringFormat='Номер полиса: {0}'}" />
+
+            <TextBlock Margin="0,0,0,16">
+                <TextBlock.Text>
+                    <MultiBinding StringFormat="Адрес: {0}, дом {1} (участок {2})">
+                        <Binding Path="Patient.House.Street.Name" />
+                        <Binding Path="Patient.House.Number" />
+                        <Binding Path="Patient.House.Department.Number" />
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
+
+            <StackPanel>
                 <ItemsControl ItemsSource="{Binding Appointments}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
@@ -30,6 +49,6 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </StackPanel>
-        </Grid>
+        </StackPanel>
     </ScrollViewer>
 </Window>

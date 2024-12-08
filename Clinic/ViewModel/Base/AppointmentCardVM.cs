@@ -24,11 +24,11 @@ namespace Clinic.ViewModel.Base
         }
 
         private ForRoleEnum ForRole;
-        private Action OnAppointmentsChange;
+        private Action OnRepoChange;
 
-        public AppointmentCardVM(Appointment appointment, ForRoleEnum forRole, Action onAppointmentsChange)
+        public AppointmentCardVM(Appointment appointment, ForRoleEnum forRole, Action onRepoChange)
         {
-            OnAppointmentsChange = onAppointmentsChange;
+            OnRepoChange = onRepoChange;
             ForRole = forRole;
             Appointment = appointment;
         }
@@ -44,7 +44,7 @@ namespace Clinic.ViewModel.Base
         public ComputedClass Computed 
         {
             get => _computed;
-            set { _computed= value; OnPropertyChanged(); }
+            set { _computed = value; OnPropertyChanged(); }
         }
 
         private ObservableCollection<ProcedureCardVM> _procedures;
@@ -90,7 +90,7 @@ namespace Clinic.ViewModel.Base
 
             Computed = computed;
 
-            Procedures = new ObservableCollection<ProcedureCardVM>(Appointment.AssignedProcedures.Select(i => new ProcedureCardVM(i, Appointment.Patient, OnAppointmentsChange)));
+            Procedures = new ObservableCollection<ProcedureCardVM>(Appointment.AssignedProcedures.Select(i => new ProcedureCardVM(i, Appointment.Patient, OnRepoChange)));
         }
 
         private RelayCommand _onGoToResultForm;
@@ -101,7 +101,7 @@ namespace Clinic.ViewModel.Base
                 {
                     _onGoToResultForm = new RelayCommand(() =>
                     {
-                        (new AppointmentResultFormWindow(Appointment, OnAppointmentsChange)).ShowDialog();
+                        (new AppointmentResultFormWindow(Appointment, OnRepoChange)).ShowDialog();
                     });
                 }
                 return _onGoToResultForm;
