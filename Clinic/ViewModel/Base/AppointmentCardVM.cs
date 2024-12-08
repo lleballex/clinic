@@ -4,6 +4,10 @@ using DAL.Entities;
 using System.Collections.ObjectModel;
 using System.Windows;
 using DAL.Repositories;
+using Microsoft.Win32;
+using PdfSharp.Pdf;
+using PdfSharp.Drawing;
+using PdfSharp.Drawing.Layout;
 
 namespace Clinic.ViewModel.Base
 {
@@ -96,6 +100,52 @@ namespace Clinic.ViewModel.Base
                 Repositories.Instance.SaveChanges();
                 OnRepoChange();
                 MessageBox.Show("Прием успешно отменен");
+            }
+        });
+
+        private RelayCommand? _exportAppointment;
+        public RelayCommand ExportAppointment => _exportAppointment ??= new RelayCommand(() =>
+        {
+            var dialog = new SaveFileDialog()
+            {
+                Filter = "PDF files (*.pdf)|*.pdf",
+                DefaultExt = ".pdf",
+                FileName = $"Прием {Appointment.Patient.Surname} {Appointment.Datetime.ToLocalTime().ToString("dd_MM_yyyy")}"
+            };
+
+            if (dialog.ShowDialog() == true)
+            {
+                var text = $"Прием у врача\n\n" +
+                           $"Врач: {Appointment.Doctor.User.Surname} {Appointment.Doctor.User.Name} {Appointment.Doctor.User.Patronymic}, {Appointment.Doctor.Specialization.Name}\n" +
+                           $"Пациент: {Appointment.Patient.Surname} {Appointment.Patient.Name} {Appointment.Patient.Patronymic}\n" +
+                           $"Дата приема: {Appointment.Datetime.ToLocalTime().ToString("dd.MM.yyyy HH:mm")}\n";
+
+                if (Appointment.Status == AppointmentStatus.Created)
+                {
+                    text += "Статус приема: запланирован\n";
+                }
+                else if (Appointment.Status == AppointmentStatus.Canceled)
+                {
+                    text += "Статус приема: отменен\n";
+                }
+                else if (Appointment.Status == AppointmentStatus.Finished)
+                {
+                    text += $"Статус приема: завершен\n" +
+                            $"Диагноз: {Appointment.Result.Diagnosis.Name}\n" + 
+                            $"Описание диагноза: {(string.IsNullOrWhiteSpace(Appointment.Result.DiagnosisDescription) ? '-' : Appointment.Result.DiagnosisDescription)}\n" +
+                            $"Рекомендации: {(string.IsNullOrWhiteSpace(Appointment.Result.Recommendations) ? '-' : Appointment.Result.Recommendations)}\n\n" +
+                            $"Назначенные процедуры: {(Appointment.AssignedProcedures.Count == 0 ? '-' : string.Join(", ", Appointment.AssignedProcedures.Select(i => i.Type.Name).ToList()))}";
+                }
+
+                var document = new PdfDocument();
+                var page = document.AddPage();
+                var gfx = XGraphics.FromPdfPage(page);
+                var formatter = new XTextFormatter(gfx);
+                var font = new XFont("Times New Roman", 16);
+                var rect = new XRect(40, 40, page.Width - 80, page.Height - 80);
+                formatter.DrawString(text, font, XBrushes.Black, rect);
+
+                document.Save(dialog.FileName);
             }
         });
 

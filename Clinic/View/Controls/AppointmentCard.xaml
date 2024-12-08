@@ -66,12 +66,20 @@
                 </ItemsControl>
             </StackPanel>
 
-            <StackPanel Visibility="{Binding IsForPatient, Converter={StaticResource IsNotVisibleConverter}}">
-                <StackPanel Margin="0,0,0,16" Orientation="Horizontal" Visibility="{Binding Appointment.Status, Converter={StaticResource IsAppointmentCreatedConverter}}">
-                    <Button Style="{StaticResource PrimaryButton}" Command="{Binding AddAppointmentResult}">Внести результаты</Button>
-                    <Button Style="{StaticResource SecondaryButton}" Command="{Binding CancelAppointment}" Margin="16,0,0,0">Отменить</Button>
-                </StackPanel> 
-            </StackPanel>
+            <Grid Margin="0,0,0,16" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="1*" MinWidth="16" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" Visibility="{Binding IsForPatient, Converter={StaticResource IsNotVisibleConverter}}">
+                    <StackPanel Orientation="Horizontal" Visibility="{Binding Appointment.Status, Converter={StaticResource IsAppointmentCreatedConverter}}">
+                        <Button Margin="0,0,16,0" Style="{StaticResource PrimaryButton}" Command="{Binding AddAppointmentResult}">Внести результаты</Button>
+                        <Button Style="{StaticResource SecondaryButton}" Command="{Binding CancelAppointment}">Отменить</Button>
+                    </StackPanel> 
+                </StackPanel>
+                <Button Grid.Column="2" Style="{StaticResource SecondaryButton}" Command="{Binding ExportAppointment}">Экспортировать</Button>
+            </Grid>
         </StackPanel>
     </Border>
 </UserControl>
