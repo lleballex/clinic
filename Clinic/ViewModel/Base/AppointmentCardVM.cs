@@ -65,6 +65,13 @@ namespace Clinic.ViewModel.Base
             set { _isProcedure = value; OnPropertyChanged(); }
         }
 
+        private bool _recommendationsExist;
+        public bool RecommendationsExist
+        {
+            get => _recommendationsExist;
+            set { _recommendationsExist = value; OnPropertyChanged(); }
+        }
+
         #endregion
 
         #region commands
@@ -91,6 +98,7 @@ namespace Clinic.ViewModel.Base
                 onRepoChange: OnRepoChange
             )));
             IsProcedure = Appointment.ProcedureId != null;
+            RecommendationsExist = !string.IsNullOrWhiteSpace(Appointment.Result?.Recommendations);
         }
 
         private void OnProceduresChange()

@@ -12,6 +12,7 @@
         <utils:IsProcedureWithoutAppointment x:Key="IsProcedureWithoutAppointment" />
         <utils:DateToLocalTimeZoneConverter x:Key="DateToLocalTimeZoneConverter" />
         <utils:IsAppointmentFinishedConverter x:Key="IsAppointmentFinishedConverter" />
+        <utils:IsVisibleConverter x:Key="IsVisibleConverter" />
     </UserControl.Resources>
 
     <Border CornerRadius="16" Padding="16" BorderThickness="1" BorderBrush="{StaticResource Gray4}">
@@ -40,7 +41,7 @@
                 </TextBlock.Text>
             </TextBlock>
 
-            <TextBlock Margin="0,0,0,16" Visibility="{Binding Procedure.Appointment, Converter={StaticResource IsAppointmentFinishedConverter}}" Text="{Binding Procedure.Appointment.Result.Recommendations}" />
+            <TextBlock Margin="0,0,0,16" Visibility="{Binding RecommendationsExist, Converter={StaticResource IsVisibleConverter}}" Text="{Binding Procedure.Appointment.Result.Recommendations}" />
 
             <Button Margin="0,0,0,16" Visibility="{Binding Procedure, Converter={StaticResource IsProcedureWithoutAppointment}}" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Left" Command="{Binding MakeAppointment}">Записать</Button>
         </StackPanel>

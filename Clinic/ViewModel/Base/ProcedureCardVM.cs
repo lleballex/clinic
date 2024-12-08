@@ -16,13 +16,24 @@ namespace Clinic.ViewModel.Base
             Procedure = procedure;
         }
 
+        #region computed
+
+        private bool _recommendationsExist;
+        public bool RecommendationsExist
+        {
+            get => _recommendationsExist;
+            set { _recommendationsExist = value; OnPropertyChanged(); }
+        }
+
+        #endregion
+
         #region store
 
         private Procedure _procedure;
         public Procedure Procedure
         {
             get => _procedure;
-            set { _procedure = value; OnPropertyChanged(); }
+            set { _procedure = value; OnPropertyChanged(); OnProcedureChange(); }
         }
 
         #endregion
@@ -36,5 +47,10 @@ namespace Clinic.ViewModel.Base
         });
 
         #endregion
+
+        private void OnProcedureChange()
+        {
+            RecommendationsExist = !string.IsNullOrWhiteSpace(Procedure.Appointment?.Result?.Recommendations);
+        }
     }
 }
