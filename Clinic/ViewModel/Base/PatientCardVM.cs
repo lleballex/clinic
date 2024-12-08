@@ -8,15 +8,15 @@ namespace Clinic.ViewModel.Base
 {
     public class PatientCardVM : BaseVM
     {
-        private Repositories Repositories = Repositories.Instance;
-
         private Action OnRepoChange;
 
         public PatientCardVM(Patient patient, Action onRepoChange)
         {
-            Patient = patient;
             OnRepoChange = onRepoChange;
+            Patient = patient;
         }
+
+        #region store
 
         private UserRole _userRole;
         public UserRole UserRole
@@ -29,91 +29,45 @@ namespace Clinic.ViewModel.Base
         public Patient Patient
         {
             get => _patient;
-            set { _patient = value; OnPropertyChanged("Patient"); UpdatePatientComputed(); }
+            set { _patient = value; OnPropertyChanged(); }
         }
 
-        private string _patientBornAtFormatted = "";
-        public string PatientBornAtFormatted
-        {
-            get => _patientBornAtFormatted;
-            set { _patientBornAtFormatted = value; OnPropertyChanged(); }
-        }
+        #endregion
 
-        private void UpdatePatientComputed()
-        {
-            PatientBornAtFormatted = TimeZoneInfo.ConvertTimeFromUtc(Patient.BornAt, TimeZoneInfo.Local).ToString("dd.MM.yyyy");
-        }
+        #region commands
 
-        private RelayCommand _goToPatient;
-        public RelayCommand GoToPatient
+        private RelayCommand? _openPatient;
+        public RelayCommand OpenPatient => _openPatient ??= new RelayCommand(() =>
         {
-            get
+            (new PatientWindow(patient: Patient)).ShowDialog();
+        });
+
+        private RelayCommand? _makeAppointment;
+        public RelayCommand MakeAppointment => _makeAppointment ??= new RelayCommand(() =>
+        {
+            (new AppointmentFormWindow(patient: Patient, onRepoChange: OnRepoChange)).ShowDialog();
+        });
+
+        private RelayCommand? _editPatient;
+        public RelayCommand EditPatient => _editPatient ??= new RelayCommand(() =>
+        {
+            (new PatientFormWindow(patient: Patient, onRepoChange: OnRepoChange)).ShowDialog();
+        });
+
+        private RelayCommand? _deletePatient;
+        public RelayCommand DeletePatient => _deletePatient ??= new RelayCommand(() =>
+        {
+            if (MessageBox.Show(
+                "Точно удалить пациента? Все связанные с ним объекты также будут удалены", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Warning
+            ) == MessageBoxResult.Yes)
             {
-                if (_goToPatient == null)
-                {
-                    _goToPatient = new RelayCommand(() =>
-                    {
-                        (new PatientWindow(Patient)).ShowDialog();
-                    });
-                }
-                return _goToPatient;
+                Repositories.Instance.Patients.Delete(Patient);
+                Repositories.Instance.SaveChanges();
+                OnRepoChange();
+                MessageBox.Show("Пацент успешно удален");
             }
-        }
+        });
 
-        private RelayCommand _goToAppointmentForm;
-        public RelayCommand GoToAppointmentForm
-        {
-            get
-            {
-                if (_goToAppointmentForm == null)
-                {
-                    _goToAppointmentForm = new RelayCommand(() =>
-                    {
-                        (new AppointmentFormWindow(Patient, OnRepoChange)).ShowDialog();
-                    });
-                }
-                return _goToAppointmentForm;
-            }
-        }
-
-        private RelayCommand _editPatient;
-        public RelayCommand EditPatient
-        {
-            get
-            {
-                if (_editPatient == null)
-                {
-                    _editPatient = new RelayCommand(() =>
-                    {
-                        (new PatientFormWindow(Patient, OnRepoChange)).ShowDialog();
-                    });
-                }
-                return _editPatient;
-            }
-        }
-
-        private RelayCommand _deletePatient;
-        public RelayCommand DeletePatient
-        {
-            get
-            {
-                if (_deletePatient == null)
-                {
-                    _deletePatient = new RelayCommand(() =>
-                    {
-                        if (MessageBox.Show(
-                            "Точно удалить пациента?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Warning
-                        ) == MessageBoxResult.Yes)
-                        {
-                            Repositories.Patients.Delete(Patient);
-                            Repositories.SaveChanges();
-                            OnRepoChange();
-                            MessageBox.Show("Пацент успешно удален");
-                        }
-                    });
-                }
-                return _deletePatient;
-            }
-        }
+        #endregion
     }
 }

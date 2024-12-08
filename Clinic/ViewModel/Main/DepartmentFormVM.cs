@@ -64,7 +64,7 @@ namespace Clinic.ViewModel.Main
 
             Repositories.Instance.SaveChanges();
             OnSuccess();
-        });
+        }, () => !string.IsNullOrWhiteSpace(FormNumber) && int.TryParse(FormNumber, out int _));
 
         private RelayCommand? _cancel;
         public RelayCommand Cancel => _cancel ??= new RelayCommand(() => OnCancel());

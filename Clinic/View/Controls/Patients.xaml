@@ -8,48 +8,33 @@
              mc:Ignorable="d" 
              d:Style="{StaticResource ControlDesignStyle}">
     <UserControl.Resources>
-        <utils:IsAdminConverter x:Key="IsAdminConverter" />
+        <utils:IsAdminOrRegistrarConverter x:Key="IsAdminOrRegistrarConverter" />
     </UserControl.Resources>
 
-    <ScrollViewer Padding="0,0,16,0">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="16" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="16" />
-                <RowDefinition Height="1*" />
-            </Grid.RowDefinitions>
-
-            <Grid Grid.Row="0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Style="{StaticResource Heading1}">Пациенты</TextBlock>
-                <Button Grid.Column="2" Style="{StaticResource PrimaryButton}" VerticalAlignment="Center" Command="{Binding GoToPatientForm}" Visibility="{Binding UserRole, Converter={StaticResource IsAdminConverter}}">Добавить пациента</Button>
-            </Grid>
-
-            <Grid Grid.Row="2">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*" MaxWidth="250" />
-                    <ColumnDefinition Width="8" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <TextBox Grid.Column="0" Text="{Binding Query}" />
-                <Button Grid.Column="2" Style="{StaticResource SecondaryButton}">Найти</Button>
-            </Grid>
-
-        <StackPanel Grid.Row="4">
-                <ItemsControl ItemsSource="{Binding Patients}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <local:PatientCard DataContext="{Binding}" Margin="0,0,0,16" />
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </StackPanel>
+    <StackPanel Margin="0,0,0,-16">
+        <Grid Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="1*" MinWidth="16" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Style="{StaticResource Heading1}">Пациенты</TextBlock>
+            <Button Grid.Column="2" Style="{StaticResource PrimaryButton}" VerticalAlignment="Center" Command="{Binding AddPatient}" Visibility="{Binding UserRole, Converter={StaticResource IsAdminOrRegistrarConverter}}">Добавить пациента</Button>
         </Grid>
-    </ScrollViewer>
+
+        <StackPanel Margin="0,0,0,16" Orientation="Horizontal">
+            <TextBox Width="250" Margin="0,0,16,0" Text="{Binding FormQuery}" />
+            <Button Style="{StaticResource SecondaryButton}">Найти</Button>
+        </StackPanel>
+
+        <StackPanel>
+            <ItemsControl ItemsSource="{Binding Patients}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <local:PatientCard DataContext="{Binding}" Margin="0,0,0,16" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+    </StackPanel>
 </UserControl>

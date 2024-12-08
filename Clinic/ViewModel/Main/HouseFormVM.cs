@@ -49,15 +49,15 @@ namespace Clinic.ViewModel.Main
             set { _formNumber = value; OnPropertyChanged(); }
         }
 
-        private int _formStreetId;
-        public int FormStreetId
+        private int? _formStreetId;
+        public int? FormStreetId
         {
             get => _formStreetId;
             set { _formStreetId = value; OnPropertyChanged(); }
         }
 
-        private int _formDepartmentId;
-        public int FormDepartmentId
+        private int? _formDepartmentId;
+        public int? FormDepartmentId
         {
             get => _formDepartmentId;
             set { _formDepartmentId = value; OnPropertyChanged(); }
@@ -93,22 +93,22 @@ namespace Clinic.ViewModel.Main
                 Repositories.Instance.Houses.Create(new House()
                 {
                     Number = FormNumber,
-                    StreetId = FormStreetId,
-                    DepartmentId = FormDepartmentId,
+                    StreetId = FormStreetId!.Value,
+                    DepartmentId = FormDepartmentId!.Value,
                 });
             } else
             {
                 House.Number = FormNumber;
-                House.StreetId = FormStreetId;
+                House.StreetId = FormStreetId!.Value;
                 House.Street = null;
-                House.DepartmentId = FormDepartmentId;
+                House.DepartmentId = FormDepartmentId!.Value;
                 House.Department = null;
                 Repositories.Instance.Houses.Update(House);
             }
 
             Repositories.Instance.SaveChanges();
             OnSuccess();
-        });
+        }, () => !string.IsNullOrWhiteSpace(FormNumber) && FormStreetId != null && FormDepartmentId != null);
 
         private RelayCommand? _cancel;
         public RelayCommand Cancel => _cancel ??= new RelayCommand(() => OnCancel());

@@ -10,6 +10,10 @@
     <UserControl.Resources>
         <utils:DoctorProfileDepartmentNumberConverter x:Key="DepartmentNumberConverter" />
         <utils:IsAdminConverter x:Key="IsAdminConverter" />
+        <utils:DateToLocalTimeZoneConverter x:Key="DateToLocalTimeZoneConverter" />
+        <utils:IsVisibleConverter x:Key="IsVisibleConverter" />
+        <utils:IsNotVisibleConverter x:Key="IsNotVisibleConverter" />
+        <utils:DoctorWorkDayWeekDayConverter x:Key="DoctorWorkDayWeekDayConverter" />
     </UserControl.Resources>
 
     <Border Background="White" CornerRadius="16" Padding="16,16,16,0">
@@ -34,18 +38,11 @@
 
             <TextBlock Margin="0,0,0,16" Grid.Column="0" Text="{Binding Doctor.User.Email, StringFormat='Email: {0}'}" />
 
-            <Grid Margin="0,0,0,16">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="24" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="24" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="{Binding DoctorBornAt, StringFormat='Дата рождения: {0:dd.MM.yyyy}'}" />
-                <TextBlock Grid.Column="2" Text="{Binding Doctor.AppointmentDuration, StringFormat='Длительность приема: {0:HH:mm}'}" />
+            <StackPanel Margin="0,0,0,16" Orientation="Horizontal">
+                <TextBlock Margin="0,0,24,0" Text="{Binding Doctor.User.BornAt, Converter={StaticResource DateToLocalTimeZoneConverter}, StringFormat='Дата рождения: {0:dd.MM.yyyy}'}" />
+                <TextBlock Margin="0,0,24,0" Text="{Binding Doctor.AppointmentDuration, StringFormat='Длительность приема: {0:HH:mm}'}" />
                 <TextBlock Grid.Column="4" Text="{Binding Doctor.Department, StringFormat='Участок: {0}', Converter={StaticResource DepartmentNumberConverter}}" />
-            </Grid>
+            </StackPanel>
 
             <Grid Margin="0,0,0,16">
                 <Grid.ColumnDefinitions>
@@ -65,44 +62,100 @@
                 </Grid.ColumnDefinitions>
                 <Border Grid.Column="0" Background="{StaticResource Gray6}" CornerRadius="8" Padding="8">
                     <StackPanel>
-                        <TextBlock Style="{StaticResource Paragraph3}" HorizontalAlignment="Center" Margin="0,0,0,4" Text="{Binding DoctorWorkDays[0].WeekDay}" />
-                        <TextBlock Style="{StaticResource Paragraph3}" Text="{Binding DoctorWorkDays[0].Status}" />
+                        <TextBlock Style="{StaticResource Paragraph3}" HorizontalAlignment="Center" Margin="0,0,0,4" Text="{Binding DoctorWorkDays[0].WeekDay, Converter={StaticResource DoctorWorkDayWeekDayConverter}}" />
+                        <TextBlock Visibility="{Binding DoctorWorkDays[0].IsWeekend, Converter={StaticResource IsVisibleConverter}}" Style="{StaticResource Paragraph3}">Выходной</TextBlock>
+                        <TextBlock Visibility="{Binding DoctorWorkDays[0].IsWeekend, Converter={StaticResource IsNotVisibleConverter}}" Style="{StaticResource Paragraph3}">
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}{0:HH:mm} - {1:HH:mm}">
+                                    <Binding Path="DoctorWorkDays[0].StartedAt" />
+                                    <Binding Path="DoctorWorkDays[0].EndedAt" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
                     </StackPanel>
                 </Border>
                 <Border Grid.Column="2" Background="{StaticResource Gray6}" CornerRadius="8" Padding="8">
                     <StackPanel>
-                        <TextBlock Style="{StaticResource Paragraph3}" HorizontalAlignment="Center" Margin="0,0,0,4" Text="{Binding DoctorWorkDays[1].WeekDay}" />
-                        <TextBlock Style="{StaticResource Paragraph3}" Text="{Binding DoctorWorkDays[1].Status}" />
+                        <TextBlock Style="{StaticResource Paragraph3}" HorizontalAlignment="Center" Margin="0,0,0,4" Text="{Binding DoctorWorkDays[1].WeekDay, Converter={StaticResource DoctorWorkDayWeekDayConverter}}" />
+                        <TextBlock Visibility="{Binding DoctorWorkDays[1].IsWeekend, Converter={StaticResource IsVisibleConverter}}" Style="{StaticResource Paragraph3}">Выходной</TextBlock>
+                        <TextBlock Visibility="{Binding DoctorWorkDays[1].IsWeekend, Converter={StaticResource IsNotVisibleConverter}}" Style="{StaticResource Paragraph3}">
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}{0:HH:mm} - {1:HH:mm}">
+                                    <Binding Path="DoctorWorkDays[1].StartedAt" />
+                                    <Binding Path="DoctorWorkDays[1].EndedAt" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
                     </StackPanel>
                 </Border>
                 <Border Grid.Column="4" Background="{StaticResource Gray6}" CornerRadius="8" Padding="8">
                     <StackPanel>
-                        <TextBlock Style="{StaticResource Paragraph3}" HorizontalAlignment="Center" Margin="0,0,0,4" Text="{Binding DoctorWorkDays[2].WeekDay}" />
-                        <TextBlock Style="{StaticResource Paragraph3}" Text="{Binding DoctorWorkDays[2].Status}" />
+                        <TextBlock Style="{StaticResource Paragraph3}" HorizontalAlignment="Center" Margin="0,0,0,4" Text="{Binding DoctorWorkDays[2].WeekDay, Converter={StaticResource DoctorWorkDayWeekDayConverter}}" />
+                        <TextBlock Visibility="{Binding DoctorWorkDays[2].IsWeekend, Converter={StaticResource IsVisibleConverter}}" Style="{StaticResource Paragraph3}">Выходной</TextBlock>
+                        <TextBlock Visibility="{Binding DoctorWorkDays[2].IsWeekend, Converter={StaticResource IsNotVisibleConverter}}" Style="{StaticResource Paragraph3}">
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}{0:HH:mm} - {1:HH:mm}">
+                                    <Binding Path="DoctorWorkDays[2].StartedAt" />
+                                    <Binding Path="DoctorWorkDays[2].EndedAt" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
                     </StackPanel>
                 </Border>
                 <Border Grid.Column="6" Background="{StaticResource Gray6}" CornerRadius="8" Padding="8">
                     <StackPanel>
-                        <TextBlock Style="{StaticResource Paragraph3}" HorizontalAlignment="Center" Margin="0,0,0,4" Text="{Binding DoctorWorkDays[3].WeekDay}" />
-                        <TextBlock Style="{StaticResource Paragraph3}" Text="{Binding DoctorWorkDays[3].Status}" />
+                        <TextBlock Style="{StaticResource Paragraph3}" HorizontalAlignment="Center" Margin="0,0,0,4" Text="{Binding DoctorWorkDays[3].WeekDay, Converter={StaticResource DoctorWorkDayWeekDayConverter}}" />
+                        <TextBlock Visibility="{Binding DoctorWorkDays[3].IsWeekend, Converter={StaticResource IsVisibleConverter}}" Style="{StaticResource Paragraph3}">Выходной</TextBlock>
+                        <TextBlock Visibility="{Binding DoctorWorkDays[3].IsWeekend, Converter={StaticResource IsNotVisibleConverter}}" Style="{StaticResource Paragraph3}">
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}{0:HH:mm} - {1:HH:mm}">
+                                    <Binding Path="DoctorWorkDays[3].StartedAt" />
+                                    <Binding Path="DoctorWorkDays[3].EndedAt" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
                     </StackPanel>
                 </Border>
                 <Border Grid.Column="8" Background="{StaticResource Gray6}" CornerRadius="8" Padding="8">
                     <StackPanel>
-                        <TextBlock Style="{StaticResource Paragraph3}" HorizontalAlignment="Center" Margin="0,0,0,4" Text="{Binding DoctorWorkDays[4].WeekDay}" />
-                        <TextBlock Style="{StaticResource Paragraph3}" Text="{Binding DoctorWorkDays[4].Status}" />
+                        <TextBlock Style="{StaticResource Paragraph3}" HorizontalAlignment="Center" Margin="0,0,0,4" Text="{Binding DoctorWorkDays[4].WeekDay, Converter={StaticResource DoctorWorkDayWeekDayConverter}}" />
+                        <TextBlock Visibility="{Binding DoctorWorkDays[4].IsWeekend, Converter={StaticResource IsVisibleConverter}}" Style="{StaticResource Paragraph3}">Выходной</TextBlock>
+                        <TextBlock Visibility="{Binding DoctorWorkDays[4].IsWeekend, Converter={StaticResource IsNotVisibleConverter}}" Style="{StaticResource Paragraph3}">
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}{0:HH:mm} - {1:HH:mm}">
+                                    <Binding Path="DoctorWorkDays[4].StartedAt" />
+                                    <Binding Path="DoctorWorkDays[4].EndedAt" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
                     </StackPanel>
                 </Border>
                 <Border Grid.Column="10" Background="{StaticResource Gray6}" CornerRadius="8" Padding="8">
                     <StackPanel>
-                        <TextBlock Style="{StaticResource Paragraph3}" HorizontalAlignment="Center" Margin="0,0,0,4" Text="{Binding DoctorWorkDays[5].WeekDay}" />
-                        <TextBlock Style="{StaticResource Paragraph3}" Text="{Binding DoctorWorkDays[5].Status}" />
+                        <TextBlock Style="{StaticResource Paragraph3}" HorizontalAlignment="Center" Margin="0,0,0,4" Text="{Binding DoctorWorkDays[5].WeekDay, Converter={StaticResource DoctorWorkDayWeekDayConverter}}" />
+                        <TextBlock Visibility="{Binding DoctorWorkDays[5].IsWeekend, Converter={StaticResource IsVisibleConverter}}" Style="{StaticResource Paragraph3}">Выходной</TextBlock>
+                        <TextBlock Visibility="{Binding DoctorWorkDays[5].IsWeekend, Converter={StaticResource IsNotVisibleConverter}}" Style="{StaticResource Paragraph3}">
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}{0:HH:mm} - {1:HH:mm}">
+                                    <Binding Path="DoctorWorkDays[5].StartedAt" />
+                                    <Binding Path="DoctorWorkDays[5].EndedAt" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
                     </StackPanel>
                 </Border>
                 <Border Grid.Column="12" Background="{StaticResource Gray6}" CornerRadius="8" Padding="8">
                     <StackPanel>
-                        <TextBlock Style="{StaticResource Paragraph3}" HorizontalAlignment="Center" Margin="0,0,0,4" Text="{Binding DoctorWorkDays[6].WeekDay}" />
-                        <TextBlock Style="{StaticResource Paragraph3}" Text="{Binding DoctorWorkDays[6].Status}" />
+                        <TextBlock Style="{StaticResource Paragraph3}" HorizontalAlignment="Center" Margin="0,0,0,4" Text="{Binding DoctorWorkDays[6].WeekDay, Converter={StaticResource DoctorWorkDayWeekDayConverter}}" />
+                        <TextBlock Visibility="{Binding DoctorWorkDays[6].IsWeekend, Converter={StaticResource IsVisibleConverter}}" Style="{StaticResource Paragraph3}">Выходной</TextBlock>
+                        <TextBlock Visibility="{Binding DoctorWorkDays[6].IsWeekend, Converter={StaticResource IsNotVisibleConverter}}" Style="{StaticResource Paragraph3}">
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}{0:HH:mm} - {1:HH:mm}">
+                                    <Binding Path="DoctorWorkDays[6].StartedAt" />
+                                    <Binding Path="DoctorWorkDays[6].EndedAt" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
                     </StackPanel>
                 </Border>
             </Grid>

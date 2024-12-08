@@ -5,19 +5,20 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Clinic.View.Windows"
         mc:Ignorable="d"
-        Style="{StaticResource Window}" Width="500" Height="Auto" SizeToContent="Height">
+        Style="{StaticResource Window}" Width="550" Height="Auto" SizeToContent="Height">
     <Window.Resources>
         <Style x:Key="FieldLabel" TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
             <Setter Property="Margin" Value="0,0,0,8" />
         </Style>
     </Window.Resources>
 
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
     <StackPanel Margin="16,16,16,0">
         <TextBlock Margin="0,0,0,16" Style="{StaticResource Heading1}" Text="{Binding WindowTitle}" />
 
         <StackPanel Margin="0,0,0,16">
             <Label Style="{StaticResource FieldLabel}">Название</Label>
-            <TextBox Text="{Binding FormName}" />
+            <TextBox Text="{Binding FormName, UpdateSourceTrigger=PropertyChanged}" />
         </StackPanel>
 
         <StackPanel Margin="0,0,0,16" Orientation="Horizontal">
@@ -25,4 +26,5 @@
             <Button Style="{StaticResource SecondaryButton}" Command="{Binding Cancel}">Отменить</Button>
         </StackPanel>
     </StackPanel>
+    </ScrollViewer>
 </Window>

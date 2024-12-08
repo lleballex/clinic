@@ -1,14 +1,13 @@
-﻿using DAL.Entities;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Windows.Data;
 
 namespace Clinic.View.Utils
 {
-    public class IsAdminConverter : IValueConverter
+    public class IsVisibleConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is UserRole role && role == UserRole.Admin)
+            if (value is bool v && v == true)
             {
                 return "Visible";
             }
@@ -21,11 +20,11 @@ namespace Clinic.View.Utils
         }
     }
 
-    public class IsAdminOrRegistrarConverter : IValueConverter
+    public class IsNotVisibleConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is UserRole role && (role == UserRole.Admin || role == UserRole.Registrar))
+            if (value is bool v && v == false)
             {
                 return "Visible";
             }

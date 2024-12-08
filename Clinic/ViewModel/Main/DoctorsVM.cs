@@ -3,17 +3,18 @@ using Clinic.ViewModel.Base;
 using DAL.Repositories;
 using Clinic.View.Windows;
 using DAL.Entities;
+using System.Collections.ObjectModel;
 
 namespace Clinic.ViewModel.Main
 {
     public class DoctorsVM : BaseVM
     {
-        private Repositories Repositories = Repositories.Instance;
-
         public DoctorsVM()
         {
             LoadDoctors(); 
         }
+
+        #region store
 
         private UserRole _userRole;
         public UserRole UserRole
@@ -22,44 +23,41 @@ namespace Clinic.ViewModel.Main
             set { _userRole = value; OnPropertyChanged(); LoadDoctors(); }
         }
 
-        private List<DoctorCardVM> _doctors = [];
-        public List<DoctorCardVM> Doctors
+        private ObservableCollection<DoctorCardVM> _doctors = [];
+        public ObservableCollection<DoctorCardVM> Doctors
         {
             get => _doctors;
             set { _doctors = value; OnPropertyChanged(); }
         }
 
-        private string _query = "";
-        public string Query
+        #endregion
+
+        #region form
+
+        private string _formQuery = "";
+        public string FormQuery
         {
-            get => _query;
-            set { _query = value; OnPropertyChanged(); LoadDoctors(); }
+            get => _formQuery;
+            set { _formQuery = value; OnPropertyChanged(); LoadDoctors(); }
         }
+
+        #endregion
+
+        #region commands
+
+        private RelayCommand? _addDoctor;
+        public RelayCommand AddDoctor => _addDoctor ??= new RelayCommand(() =>
+        {
+            (new DoctorFormWindow(onRepoChange: LoadDoctors)).ShowDialog();
+        });
+
+        #endregion
 
         private void LoadDoctors()
         {
-            var newDoctors = new List<DoctorCardVM>();
-            foreach (var doctor in Repositories.DoctorProfiles.FindAll(query: Query))
-            {
-                newDoctors.Add(new DoctorCardVM(doctor, LoadDoctors) { UserRole = UserRole });
-            }
-            Doctors = newDoctors;
-        }
-
-        private RelayCommand _addDoctor;
-        public RelayCommand AddDoctor
-        {
-            get
-            {
-                if (_addDoctor == null)
-                {
-                    _addDoctor = new RelayCommand(() =>
-                    {
-                        (new DoctorFormWindow(null, LoadDoctors)).ShowDialog();
-                    });
-                }
-                return _addDoctor;
-            }
+            Doctors = new ObservableCollection<DoctorCardVM>(Repositories.Instance.DoctorProfiles
+                .FindAll(query: FormQuery)
+                .Select(i => new DoctorCardVM(doctor: i, onRepoChange: LoadDoctors) { UserRole = UserRole }));
         }
     }
 }

@@ -1,20 +1,14 @@
-﻿using Clinic.ViewModel.Utils;
+﻿using Clinic.Model;
+using Clinic.ViewModel.Utils;
 using DAL.Entities;
 using DAL.Repositories;
+using System.Collections.ObjectModel;
 using System.Windows;
 
 namespace Clinic.ViewModel.Base
 {
     public class DoctorCardVM : BaseVM
     {
-        public class ComputedDoctorWorkDay
-        {
-            public string WeekDay { get; set; }
-            public string Status { get; set; }
-        }
-
-        private Repositories Repositories = Repositories.Instance;
-
         private Action OnRepoChange;
 
         public DoctorCardVM(DoctorProfile doctor, Action onRepoChange)
@@ -22,6 +16,8 @@ namespace Clinic.ViewModel.Base
             OnRepoChange = onRepoChange;
             Doctor = doctor;
         }
+
+        #region store
 
         private UserRole _userRole;
         public UserRole UserRole
@@ -34,80 +30,64 @@ namespace Clinic.ViewModel.Base
         public DoctorProfile Doctor
         {
             get => _doctor;
-            set { _doctor = value; OnPropertyChanged(); UpdateDoctorComputerd(); }
+            set { _doctor = value; OnPropertyChanged(); UpdateDoctorComputed(); }
         }
 
-        private DateTime _doctorBornAt;
-        public DateTime DoctorBornAt
-        {
-            get => _doctorBornAt;
-            set { _doctorBornAt = value; OnPropertyChanged(); }
-        }
+        #endregion
 
-        private List<ComputedDoctorWorkDay> _doctorWorkDays;
-        public List<ComputedDoctorWorkDay> DoctorWorkDays
+        #region computed
+
+        private ObservableCollection<DoctorWorkDayModel> _doctorWorkDays = [];
+        public ObservableCollection<DoctorWorkDayModel> DoctorWorkDays
         {
             get => _doctorWorkDays;
             set { _doctorWorkDays = value; OnPropertyChanged(); }
         }
 
-        private void UpdateDoctorComputerd()
-        {
-            DoctorBornAt = Doctor.User.BornAt.ToLocalTime();
+        #endregion
 
-            var newWorkDays = new List<ComputedDoctorWorkDay>();
-            var weekDaysStr = new List<string>() { "ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ", "ВС" };
+        #region commands
+
+        private RelayCommand? _updateDoctor;
+        public RelayCommand UpdateDoctor => _updateDoctor ??= new RelayCommand(() =>
+        {
+            // TODO: implement
+        });
+
+        private RelayCommand? _deleteDoctor;
+        public RelayCommand DeleteDoctor => _deleteDoctor ??= new RelayCommand(() =>
+        {
+            if (MessageBox.Show(
+                "Точно удалить врача? Все свяазанные с ним объекты также будут удалены", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Warning
+            ) == MessageBoxResult.Yes)
+            {
+                Repositories.Instance.Users.Delete(Doctor.User);
+                Repositories.Instance.SaveChanges();
+                OnRepoChange();
+                MessageBox.Show("Врач успешно удален");
+            }
+        });
+
+        #endregion
+
+        private void UpdateDoctorComputed()
+        {
             var weekDays = new List<DayOfWeek>() { DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, DayOfWeek.Thursday, DayOfWeek.Friday, DayOfWeek.Saturday, DayOfWeek.Sunday };
-            for (int i = 0; i < 7; i++)
-            {
-                var found = Doctor.WorkDays.Where(j => j.WeekDay == weekDays[i]).FirstOrDefault();
-                newWorkDays.Add(new ComputedDoctorWorkDay()
-                {
-                    WeekDay = weekDaysStr[i],
-                    Status = found == null ? "Выходной" : found.StartedAt.ToString("HH:mm") + " - " + found.EndedAt.ToString("HH:mm")
-                });
-            }
-            DoctorWorkDays = newWorkDays;
-        }
 
-        private RelayCommand _updateDoctor;
-        public RelayCommand UpdateDoctor
-        {
-            get
-            {
-                if (_updateDoctor == null)
+            DoctorWorkDays = new ObservableCollection<DoctorWorkDayModel>(weekDays
+                .Select(weekDay =>
                 {
-                    _updateDoctor = new RelayCommand(() =>
+                    var found = Doctor.WorkDays.Where(i => i.WeekDay == weekDay).FirstOrDefault();
+                    return new DoctorWorkDayModel()
                     {
-
-                    });
-                }
-                return _updateDoctor;
-            }
-        }
-
-        private RelayCommand _deleteDoctor;
-        public RelayCommand DeleteDoctor
-        {
-            get
-            {
-                if (_deleteDoctor == null)
-                {
-                    _deleteDoctor = new RelayCommand(() =>
-                    {
-                        if (MessageBox.Show(
-                            "Точно удалить доктора?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Warning
-                        ) == MessageBoxResult.Yes)
-                        {
-                            Repositories.Users.Delete(Doctor.User);
-                            Repositories.SaveChanges();
-                            OnRepoChange();
-                            MessageBox.Show("Доктор успешно удален");
-                        }
-                    });
-                }
-                return _deleteDoctor;
-            }
+                        WeekDay = weekDay,
+                        IsWeekend = found == null,
+                        StartedAt = found?.StartedAt,
+                        EndedAt = found?.EndedAt
+                    };
+                })
+                .ToList()
+            );
         }
     }
 }

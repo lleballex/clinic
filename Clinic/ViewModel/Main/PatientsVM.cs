@@ -3,17 +3,18 @@ using Clinic.ViewModel.Base;
 using Clinic.View.Windows;
 using DAL.Repositories;
 using DAL.Entities;
+using System.Collections.ObjectModel;
 
 namespace Clinic.ViewModel.Main
 {
     public class PatientsVM : BaseVM
     {
-        private Repositories Repositories = Repositories.Instance;
-
         public PatientsVM()
         {
             LoadPatients();
         }
+
+        #region store
 
         private UserRole _userRole;
         public UserRole UserRole
@@ -22,44 +23,41 @@ namespace Clinic.ViewModel.Main
             set { _userRole = value; OnPropertyChanged(); LoadPatients(); }
         }
 
-        private List<PatientCardVM> _patients = [];
-        public List<PatientCardVM> Patients
+        private ObservableCollection<PatientCardVM> _patients = [];
+        public ObservableCollection<PatientCardVM> Patients
         {
             get => _patients;
             set { _patients = value; OnPropertyChanged(); }
         }
 
-        private string _query = "";
-        public string Query
+        #endregion
+
+        #region form
+
+        private string _formQuery = "";
+        public string FormQuery
         {
-            get => _query;
-            set { _query = value; OnPropertyChanged(); LoadPatients(); }
+            get => _formQuery;
+            set { _formQuery = value; OnPropertyChanged(); LoadPatients(); }
         }
+
+        #endregion
+
+        #region commands
+
+        private RelayCommand? _addPatient;
+        public RelayCommand AddPatient => _addPatient ??= new RelayCommand(() =>
+        {
+            (new PatientFormWindow(onRepoChange: LoadPatients)).ShowDialog();
+        });
+
+        #endregion
 
         private void LoadPatients()
         {
-            List<PatientCardVM> newPatients = [];
-            foreach (var patient in Repositories.Patients.FindAll(Query))
-            {
-                newPatients.Add(new PatientCardVM(patient, LoadPatients) { UserRole = UserRole });
-            }
-            Patients = newPatients;
-        }
-
-        private RelayCommand _goToPatientForm;
-        public RelayCommand GoToPatientForm
-        {
-            get
-            {
-                if (_goToPatientForm == null)
-                {
-                    _goToPatientForm = new RelayCommand(() =>
-                    {
-                        (new PatientFormWindow(null, () => LoadPatients())).ShowDialog();
-                    });
-                }
-                return _goToPatientForm;
-            }
+            Patients = new ObservableCollection<PatientCardVM>(Repositories.Instance.Patients
+                .FindAll(query: FormQuery)
+                .Select(i => new PatientCardVM(patient: i, onRepoChange: LoadPatients) { UserRole = UserRole }));
         }
     }
 }

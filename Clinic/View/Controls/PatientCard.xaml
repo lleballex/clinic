@@ -9,46 +9,39 @@
              d:Style="{StaticResource ControlDesignStyle}" d:Background="{StaticResource Gray6}" d:Height="Auto" d:Width="700">
     <UserControl.Resources>
         <utils:IsAdminConverter x:Key="IsAdminConverter" />
+        <utils:IsAdminOrRegistrarConverter x:Key="IsAdminOrRegistrarConverter" />
+        <utils:DateToLocalTimeZoneConverter x:Key="DateToLocalTimeZoneConverter" />
     </UserControl.Resources>
 
-    <Border Background="White" CornerRadius="16" Padding="16">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="16" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="16" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="16" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-
-            <TextBlock Grid.Row="0" Style="{StaticResource Heading4}">
-            <TextBlock Text="{Binding Patient.Surname}" />
-            <TextBlock Text="{Binding Patient.Name}" />
-            <TextBlock Text="{Binding Patient.Patronymic}" />
+    <Border Background="White" CornerRadius="16" Padding="16,16,16,0">
+        <StackPanel>
+            <TextBlock Margin="0,0,0,16" Style="{StaticResource Heading4}">
+                <TextBlock.Text>
+                    <MultiBinding StringFormat="{}{0} {1} {2}">
+                        <Binding Path="Patient.Surname" />
+                        <Binding Path="Patient.Name" />
+                        <Binding Path="Patient.Patronymic" />
+                    </MultiBinding>
+                </TextBlock.Text>
             </TextBlock>
 
-            <Grid Grid.Row="2">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="24" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="24" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0">Дата рождения: <TextBlock Text="{Binding PatientBornAtFormatted}" /></TextBlock>
-                <TextBlock Grid.Column="2">Номер телефона: <TextBlock Text="{Binding Patient.PhoneNumber}" /></TextBlock>
-                <TextBlock Grid.Column="4">Номер полиса: <TextBlock Text="{Binding Patient.MedicalPolicyNumber}" /></TextBlock>
-            </Grid>
+            <StackPanel Margin="0,0,0,16" Orientation="Horizontal">
+                <TextBlock Margin="0,0,24,0" Text="{Binding Patient.BornAt, Converter={StaticResource DateToLocalTimeZoneConverter}, StringFormat='Дата рождения: {0:dd.MM.yyyy}'}" />
+                <TextBlock Margin="0,0,24,0" Text="{Binding Patient.PhoneNumber, StringFormat='Номер телефона: {0}'}" />
+                <TextBlock Text="{Binding Patient.MedicalPolicyNumber, StringFormat='Номер полиса: {0}'}" />
+            </StackPanel>
 
-            <TextBlock Grid.Row="4">
-                <TextBlock Text="{Binding Patient.House.Street.Name}" />,
-                дом <TextBlock Text="{Binding Patient.House.Number}" />
-                (участок <TextBlock Text="{Binding Patient.House.Department.Number}" />)
+            <TextBlock Margin="0,0,0,16">
+                <TextBlock.Text>
+                    <MultiBinding StringFormat="{}{0}, дом {1} (участок {2})">
+                        <Binding Path="Patient.House.Street.Name" />
+                        <Binding Path="Patient.House.Number" />
+                        <Binding Path="Patient.House.Department.Number" />
+                    </MultiBinding>
+                </TextBlock.Text>
             </TextBlock>
 
-            <Grid Grid.Row="6">
+            <Grid Margin="0,0,0,16">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="16" />
@@ -58,11 +51,11 @@
                     <ColumnDefinition Width="16" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Style="{StaticResource SecondaryButton}" Command="{Binding GoToPatient}">Медкарта</Button>
-                <Button Grid.Column="2" Style="{StaticResource PrimaryButton}" Command="{Binding GoToAppointmentForm}">Записать на прием</Button>
-                <Button Grid.Column="4" Style="{StaticResource SecondaryButton}" Command="{Binding EditPatient}" Visibility="{Binding UserRole, Converter={StaticResource IsAdminConverter}}">Изменить</Button>
-                <Button Grid.Column="6" Style="{StaticResource DangerButton}" Command="{Binding DeletePatient}" Visibility="{Binding UserRole, Converter={StaticResource IsAdminConverter}}">Удалить</Button>
+                <Button Grid.Column="0" Style="{StaticResource SecondaryButton}" Command="{Binding OpenPatient}">Медкарта</Button>
+                <Button Grid.Column="2" Style="{StaticResource PrimaryButton}" Command="{Binding MakeAppointment}">Записать на прием</Button>
+                <Button Grid.Column="4" Style="{StaticResource SecondaryButton}" Command="{Binding EditPatient}" Visibility="{Binding UserRole, Converter={StaticResource IsAdminOrRegistrarConverter}}">Изменить</Button>
+                <Button Grid.Column="6" Style="{StaticResource DangerButton}" Command="{Binding DeletePatient}" Visibility="{Binding UserRole, Converter={StaticResource IsAdminOrRegistrarConverter}}">Удалить</Button>
             </Grid>
-        </Grid>
+        </StackPanel>
     </Border>
 </UserControl>

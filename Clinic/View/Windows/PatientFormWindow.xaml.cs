@@ -8,7 +8,7 @@ namespace Clinic.View.Windows
     {
         private Action OnRepoChange;
 
-        public PatientFormWindow(Patient? patient, Action onRepoChange)
+        public PatientFormWindow(Action onRepoChange, Patient? patient = null)
         {
             InitializeComponent();
 
