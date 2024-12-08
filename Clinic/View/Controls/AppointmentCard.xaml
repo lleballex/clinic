@@ -66,9 +66,11 @@
                 </ItemsControl>
             </StackPanel>
 
-            <StackPanel Margin="0,0,0,16" Orientation="Horizontal" Visibility="{Binding Appointment.Status, Converter={StaticResource IsAppointmentCreatedConverter}}">
-                <Button Style="{StaticResource PrimaryButton}" Command="{Binding AddAppointmentResult}">Внести результаты</Button>
-                <Button Style="{StaticResource SecondaryButton}" Command="{Binding CancelAppointment}" Margin="16,0,0,0">Отменить</Button>
+            <StackPanel Visibility="{Binding IsForPatient, Converter={StaticResource IsNotVisibleConverter}}">
+                <StackPanel Margin="0,0,0,16" Orientation="Horizontal" Visibility="{Binding Appointment.Status, Converter={StaticResource IsAppointmentCreatedConverter}}">
+                    <Button Style="{StaticResource PrimaryButton}" Command="{Binding AddAppointmentResult}">Внести результаты</Button>
+                    <Button Style="{StaticResource SecondaryButton}" Command="{Binding CancelAppointment}" Margin="16,0,0,0">Отменить</Button>
+                </StackPanel> 
             </StackPanel>
         </StackPanel>
     </Border>

@@ -34,7 +34,8 @@ namespace Clinic.ViewModel.Main
         private void LoadAppointments()
         {
             Appointments = new ObservableCollection<AppointmentCardVM>(Repositories.Instance.Appointments
-                .FindAll(patientId: Patient.Id).Select(i => new AppointmentCardVM(
+                .FindAll(patientId: Patient.Id, isProcedure: false)
+                .Select(i => new AppointmentCardVM(
                     appointment: i,
                     forRole: AppointmentCardVM.ForRoleEnum.Patient,
                     onRepoChange: LoadAppointments

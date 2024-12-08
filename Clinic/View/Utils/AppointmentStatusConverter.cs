@@ -37,6 +37,10 @@ namespace Clinic.View.Utils
             {
                 return "Visible";
             }
+            else if (value is Appointment appointment && appointment.Status == AppointmentStatus.Finished)
+            {
+                return "Visible";
+            }
             return "Collapsed";
         }
 

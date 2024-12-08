@@ -10,7 +10,8 @@
     <UserControl.Resources>
         <utils:ProcedureStatusConverter x:Key="ProcedureStatusConverter" />
         <utils:IsProcedureWithoutAppointment x:Key="IsProcedureWithoutAppointment" />
-        <utils:IsProcedureWithAppointment x:Key="IsProcedureWithAppointment" />
+        <utils:DateToLocalTimeZoneConverter x:Key="DateToLocalTimeZoneConverter" />
+        <utils:IsAppointmentFinishedConverter x:Key="IsAppointmentFinishedConverter" />
     </UserControl.Resources>
 
     <Border CornerRadius="16" Padding="16" BorderThickness="1" BorderBrush="{StaticResource Gray4}">
@@ -20,14 +21,28 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="1*" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="16" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" Style="{StaticResource Heading5}" Text="{Binding Procedure.Type.Name}" />
-                <Border Grid.Column="2" CornerRadius="8" Padding="8,4" Background="{StaticResource Gray4}">
+                <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="{Binding Procedure.Appointment.Datetime, Converter={StaticResource DateToLocalTimeZoneConverter}, StringFormat='{}{0:dd.MM.yyyy HH:mm}'}" />
+                <Border Grid.Column="4" CornerRadius="8" Padding="8,4" Background="{StaticResource Gray4}">
                     <TextBlock Text="{Binding Procedure.Appointment, Converter={StaticResource ProcedureStatusConverter}}" Style="{StaticResource Paragraph3}" />
                 </Border>
             </Grid>
+
+            <TextBlock Visibility="{Binding Procedure.Appointment, Converter={StaticResource IsAppointmentFinishedConverter}}" Margin="0,0,0,16">
+                <TextBlock.Text>
+                    <MultiBinding StringFormat="Диагноз: {0}. {1}">
+                        <Binding Path="Procedure.Appointment.Result.Diagnosis.Name" />
+                        <Binding Path="Procedure.Appointment.Result.DiagnosisDescription" />
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
+
+            <TextBlock Margin="0,0,0,16" Visibility="{Binding Procedure.Appointment, Converter={StaticResource IsAppointmentFinishedConverter}}" Text="{Binding Procedure.Appointment.Result.Recommendations}" />
+
             <Button Margin="0,0,0,16" Visibility="{Binding Procedure, Converter={StaticResource IsProcedureWithoutAppointment}}" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Left" Command="{Binding MakeAppointment}">Записать</Button>
-            <TextBlock Margin="0,0,0,16" Visibility="{Binding Procedure, Converter={StaticResource IsProcedureWithAppointment}}" Text="Результаты приема выше" />
         </StackPanel>
     </Border>
 </UserControl>
