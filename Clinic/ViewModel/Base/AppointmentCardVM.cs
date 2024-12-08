@@ -2,6 +2,8 @@
 using Clinic.View.Windows;
 using DAL.Entities;
 using System.Collections.ObjectModel;
+using System.Windows;
+using DAL.Repositories;
 
 namespace Clinic.ViewModel.Base
 {
@@ -85,7 +87,16 @@ namespace Clinic.ViewModel.Base
         private RelayCommand? _cancelAppointment;
         public RelayCommand CancelAppointment => _cancelAppointment ??= new RelayCommand(() =>
         {
-            // TODO: implement
+            if (MessageBox.Show(
+                "Точно отменить прием?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Warning
+            ) == MessageBoxResult.Yes)
+            {
+                Appointment.Status = AppointmentStatus.Canceled;
+                Repositories.Instance.Appointments.Update(Appointment);
+                Repositories.Instance.SaveChanges();
+                OnRepoChange();
+                MessageBox.Show("Прием успешно отменен");
+            }
         });
 
         #endregion
