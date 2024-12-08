@@ -4,13 +4,15 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Clinic.View.Windows"
+        xmlns:utils="clr-namespace:Clinic.View.Utils"
         mc:Ignorable="d"
         Style="{StaticResource Window}" Width="700" Height="Auto" SizeToContent="Height">
     <Window.Resources>
+        <utils:TimeOnlyEqualsConverter x:Key="TimeOnlyEqualsConverter" />
+
         <Style x:Key="FieldLabel" TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
             <Setter Property="Margin" Value="0,0,0,8" />
         </Style>
-        <local:AConverter x:Key="aConverter" />
     </Window.Resources>
 
     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
@@ -69,7 +71,7 @@
                                         <Style.Triggers>
                                             <DataTrigger Value="true">
                                                 <DataTrigger.Binding>
-                                                    <MultiBinding Converter="{StaticResource aConverter}">
+                                                    <MultiBinding Converter="{StaticResource TimeOnlyEqualsConverter}">
                                                         <Binding />
                                                         <Binding Path="DataContext.FormTime" RelativeSource="{RelativeSource AncestorType=ItemsControl}" />
                                                     </MultiBinding>
@@ -80,7 +82,7 @@
                                     </Style>
                                 </Border.Style>
                                 <Button Padding="8" Command="{Binding DataContext.SelectTimeSlot, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}">
-                                    <TextBlock Style="{StaticResource Paragraph3}" Text="{Binding}" />
+                                    <TextBlock Style="{StaticResource Paragraph3}" Text="{Binding StringFormat='{}{0:HH:mm}'}" />
                                 </Button>
                             </Border>
                         </DataTemplate>
