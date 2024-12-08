@@ -12,17 +12,6 @@ namespace Clinic.ViewModel.Base
             Doctor, Patient
         }
 
-        public class ComputedClass
-        {
-            public string Title { get; set; }
-            public string Date { get; set; }
-            public string Time { get; set; }
-            public string Status { get; set; }
-            public string IsFinished { get; set; }
-            public string IsCreated { get; set; }
-            public string HasProcedures { get; set; }
-        }
-
         private ForRoleEnum ForRole;
         private Action OnRepoChange;
 
@@ -31,81 +20,82 @@ namespace Clinic.ViewModel.Base
             OnRepoChange = onRepoChange;
             ForRole = forRole;
             Appointment = appointment;
+
+            IsForPatient = ForRole == ForRoleEnum.Patient;
+        }
+
+        #region store
+
+        private bool _isForPatient;
+        public bool IsForPatient
+        {
+            get => _isForPatient;
+            set { _isForPatient = value; OnPropertyChanged(); }
         }
 
         private Appointment _appointment;
         public Appointment Appointment
         {
             get => _appointment;
-            set { _appointment = value; OnPropertyChanged(); UpdateAppointmentComputedData(); }
-        }
-
-        private ComputedClass _computed;
-        public ComputedClass Computed 
-        {
-            get => _computed;
-            set { _computed = value; OnPropertyChanged(); }
+            set { _appointment = value; OnPropertyChanged(); OnAppointmentChange(); }
         }
 
         private ObservableCollection<ProcedureCardVM> _procedures;
         public ObservableCollection<ProcedureCardVM> Procedures
         {
             get => _procedures;
-            set { _procedures = value; OnPropertyChanged(); }
+            set { _procedures = value; OnPropertyChanged(); OnProceduresChange(); }
         }
 
-        private void UpdateAppointmentComputedData()
+        #endregion
+
+        #region computed
+
+        private bool _proceduresExist;
+        public bool ProceduresExist
         {
-            var computed = new ComputedClass();
-
-            if (ForRole == ForRoleEnum.Doctor)
-            {
-                computed.Title = $"{Appointment.Patient.Surname} {Appointment.Patient.Name} {Appointment.Patient.Patronymic}";
-            }
-            else if (ForRole == ForRoleEnum.Patient)
-            {
-                computed.Title = Appointment.Doctor.Specialization.Name;
-            }
-
-            var localDatetime = TimeZoneInfo.ConvertTimeFromUtc(Appointment.Datetime, TimeZoneInfo.Local);
-            computed.Date = localDatetime.ToString("dd.MM.yyyy");
-            computed.Time = localDatetime.ToString("HH:mm") + " - " + (localDatetime.Add(Appointment.Doctor.AppointmentDuration.ToTimeSpan())).ToString("HH:mm");
-
-            switch (Appointment.Status)
-            {
-                case AppointmentStatus.Created:
-                    computed.Status = "Запланирован";
-                    break;
-                case AppointmentStatus.Finished:
-                    computed.Status = "Завершен";
-                    break;
-                case AppointmentStatus.Canceled:
-                    computed.Status = "Отменен";
-                    break;
-            }
-
-            computed.IsFinished = Appointment.Status == AppointmentStatus.Finished ? "Visible" : "Collapsed";
-            computed.IsCreated = Appointment.Status == AppointmentStatus.Created ? "Visible" : "Collapsed";
-            computed.HasProcedures = Appointment.AssignedProcedures.Count > 0 ? "Visible" : "Collapsed";
-
-            Computed = computed;
-
-            Procedures = new ObservableCollection<ProcedureCardVM>(Appointment.AssignedProcedures.Select(i => new ProcedureCardVM(i, Appointment.Patient, OnRepoChange)));
+            get => _proceduresExist;
+            set { _proceduresExist = value; OnPropertyChanged(); }
         }
 
-        private RelayCommand _onGoToResultForm;
-        public RelayCommand OnGoToResultForm
+        private bool _isProcedure;
+        public bool IsProcedure 
         {
-            get {
-                if (_onGoToResultForm == null)
-                {
-                    _onGoToResultForm = new RelayCommand(() =>
-                    {
-                        (new AppointmentResultFormWindow(Appointment, OnRepoChange)).ShowDialog();
-                    });
-                }
-                return _onGoToResultForm;
-            }
+            get => _isProcedure;
+            set { _isProcedure = value; OnPropertyChanged(); }
+        }
+
+        #endregion
+
+        #region commands
+
+        private RelayCommand? _addAppointmentResult;
+        public RelayCommand AddAppointmentResult => _addAppointmentResult ??= new RelayCommand(() =>
+        {
+            (new AppointmentResultFormWindow(appointment: Appointment, onRepoChange: OnRepoChange)).ShowDialog();
+        });
+
+        private RelayCommand? _cancelAppointment;
+        public RelayCommand CancelAppointment => _cancelAppointment ??= new RelayCommand(() =>
+        {
+            // TODO: implement
+        });
+
+        #endregion
+
+        private void OnAppointmentChange()
+        {
+            Procedures = new ObservableCollection<ProcedureCardVM>(Appointment.AssignedProcedures.Select(i => new ProcedureCardVM(
+                procedure: i,
+                patient: Appointment.Patient,
+                onRepoChange: OnRepoChange
+            )));
+            IsProcedure = Appointment.ProcedureId != null;
+        }
+
+        private void OnProceduresChange()
+        {
+            ProceduresExist = Procedures.Count > 0;
         }
     }
 }

@@ -7,11 +7,11 @@ namespace Clinic.View.Windows
     {
         private Action OnAppointmentsChange;
 
-        public AppointmentResultFormWindow(DAL.Entities.Appointment appointment, Action onAppointmentsChange)
+        public AppointmentResultFormWindow(DAL.Entities.Appointment appointment, Action onRepoChange)
         {
             InitializeComponent();
 
-            OnAppointmentsChange = onAppointmentsChange;
+            OnAppointmentsChange = onRepoChange;
 
             DataContext = new AppointmentResultFormVM(appointment, OnSuccess, OnCancel);
         }

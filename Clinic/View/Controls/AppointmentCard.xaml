@@ -4,8 +4,18 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Clinic.View.Controls"
+             xmlns:utils="clr-namespace:Clinic.View.Utils"
              mc:Ignorable="d" 
              d:Style="{StaticResource ControlDesignStyle}" d:Height="Auto" d:Background="{StaticResource Gray6}">
+    <UserControl.Resources>
+        <utils:IsVisibleConverter x:Key="IsVisibleConverter" />
+        <utils:IsNotVisibleConverter x:Key="IsNotVisibleConverter" />
+        <utils:DateToLocalTimeZoneConverter x:Key="DateToLocalTimeZoneConverter" />
+        <utils:AppointmentStatusConverter x:Key="AppointmentStatusConverter" />
+        <utils:IsAppointmentFinishedConverter x:Key="IsAppointmentFinishedConverter" />
+        <utils:IsAppointmentCreatedConverter x:Key="IsAppointmentCreatedConverter" />
+    </UserControl.Resources>
+
     <Border Background="{StaticResource White}" CornerRadius="16" Padding="16">
         <StackPanel Margin="0,0,0,-16">
             <Grid Margin="0,0,0,16">
@@ -14,24 +24,38 @@
                     <ColumnDefinition Width="1*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Style="{StaticResource Heading4}" Text="{Binding Computed.Title}" />
+                <TextBlock Grid.Column="0" Visibility="{Binding IsForPatient, Converter={StaticResource IsVisibleConverter}}" Style="{StaticResource Heading4}" Text="{Binding Appointment.Doctor.Specialization.Name}" />
+                <TextBlock Grid.Column="0" Visibility="{Binding IsForPatient, Converter={StaticResource IsNotVisibleConverter}}" Style="{StaticResource Heading4}">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="{}{0} {1} {2}">
+                            <Binding Path="Appointment.Patient.Surname" />
+                            <Binding Path="Appointment.Patient.Surname" />
+                            <Binding Path="Appointment.Patient.Surname" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
                 <StackPanel Grid.Column="2" VerticalAlignment="Center" Orientation="Horizontal">
-                    <TextBlock VerticalAlignment="Center" Text="{Binding Computed.Date}" />
-                    <TextBlock VerticalAlignment="Center" Margin="12,0,0,0" Text="{Binding Computed.Time}" />
+                    <TextBlock VerticalAlignment="Center" Text="{Binding Appointment.Datetime, Converter={StaticResource DateToLocalTimeZoneConverter}, StringFormat='{}{0:dd.MM.yyyy HH:mm}'}" />
                     <Border Margin="12,0,0,0" CornerRadius="8" Background="{StaticResource Gray4}" Padding="8,4">
-                        <TextBlock Style="{StaticResource Paragraph3}" Text="{Binding Computed.Status}" />
+                        <TextBlock Style="{StaticResource Paragraph3}" Text="{Binding Appointment.Status, Converter={StaticResource AppointmentStatusConverter}}" />
                     </Border>
                 </StackPanel>
             </Grid>
 
-            <TextBlock Margin="0,0,0,16" Visibility="{Binding Computed.IsFinished}">
-                Диагноз: <TextBlock Text="{Binding Appointment.Result.Diagnosis.Name}" />.
-                <TextBlock Text="{Binding Appointment.Result.DiagnosisDescription}" />
+            <TextBlock Margin="0,0,0,16" Style="{StaticResource Heading5}" Visibility="{Binding IsProcedure, Converter={StaticResource IsVisibleConverter}}" Text="{Binding Appointment.Procedure.Type.Name, StringFormat='Процедура: {0}'}" />
+
+            <TextBlock Margin="0,0,0,16" Visibility="{Binding Appointment.Status, Converter={StaticResource IsAppointmentFinishedConverter}}">
+                <TextBlock.Text>
+                    <MultiBinding StringFormat="Диагноз: {0}. {1}">
+                        <Binding Path="Appointment.Result.Diagnosis.Name" />
+                        <Binding Path="Appointment.Result.DiagnosisDescription" />
+                    </MultiBinding>
+                </TextBlock.Text>
             </TextBlock>
 
-            <TextBlock Margin="0,0,0,16" Visibility="{Binding Computed.IsFinished}" Text="{Binding Appointment.Result.Recommendations}" />
+            <TextBlock Margin="0,0,0,16" Visibility="{Binding Appointment.Status, Converter={StaticResource IsAppointmentFinishedConverter}}" Text="{Binding Appointment.Result.Recommendations}" />
 
-            <StackPanel Margin="0,0,0,16" Visibility="{Binding Computed.HasProcedures}">
+            <StackPanel Margin="0,0,0,16" Visibility="{Binding ProceduresExist, Converter={StaticResource IsVisibleConverter}}">
                 <TextBlock Margin="0,0,0,16" Style="{StaticResource Heading5}">Процедуры</TextBlock>
                 <ItemsControl ItemsSource="{Binding Procedures}" Margin="0,0,0,-16">
                     <ItemsControl.ItemTemplate>
@@ -42,9 +66,9 @@
                 </ItemsControl>
             </StackPanel>
 
-            <StackPanel Margin="0,0,0,16" Orientation="Horizontal" Visibility="{Binding Computed.IsCreated}">
-                <Button Style="{StaticResource SecondaryButton}" Margin="0,0,16,0">Отменить</Button>
-                <Button Style="{StaticResource PrimaryButton}" Command="{Binding OnGoToResultForm}">Внести результаты</Button>
+            <StackPanel Margin="0,0,0,16" Orientation="Horizontal" Visibility="{Binding Appointment.Status, Converter={StaticResource IsAppointmentCreatedConverter}}">
+                <Button Style="{StaticResource PrimaryButton}" Command="{Binding AddAppointmentResult}">Внести результаты</Button>
+                <Button Style="{StaticResource SecondaryButton}" Command="{Binding CancelAppointment}" Margin="16,0,0,0">Отменить</Button>
             </StackPanel>
         </StackPanel>
     </Border>

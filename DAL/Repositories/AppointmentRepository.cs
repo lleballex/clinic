@@ -24,6 +24,8 @@ namespace DAL.Repositories
                 .ThenInclude(i => i.Type)
                 .Include(i => i.AssignedProcedures)
                 .ThenInclude(i => i.Appointment)
+                .Include(i => i.Procedure)
+                .ThenInclude(i => i.Type)
                 .Where(i => (patientId == null || i.PatientId == patientId) && (doctorId == null || i.DoctorId == doctorId) &&
                             (date == null || DateOnly.FromDateTime(i.Datetime.ToLocalTime()) == date) &&
                             (status == null || i.Status == status))
