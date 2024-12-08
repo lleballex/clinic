@@ -1,86 +1,126 @@
 ﻿using Clinic.ViewModel.Utils;
 using DAL.Entities;
 using DAL.Repositories;
+using System.Collections.ObjectModel;
 using System.Windows;
 
 namespace Clinic.ViewModel.Main
 {
     public class PatientFormVM : BaseVM
     {
-        public class FormClass
-        {
-            public string Name { get; set; } = "";
-            public string Surname { get; set; } = "";
-            public string? Patronymic { get; set; }
-            public PatientGender Gender { get; set; } = PatientGender.Male;
-            public DateTime BornAt { get; set; } = DateTime.Now;
-            public string PhoneNumber { get; set; } = "";
-            public string MedicalPolicyNumber { get; set; } = "";
-            public int HouseId { get; set; }
-        }
-
-        private Repositories Repositories = Repositories.Instance;
         private Patient? Patient;
-        private Action OnSubmit;
+        private Action OnSuccess;
         private Action OnCancel;
 
-        public PatientFormVM(Patient? patient, Action onSubmit, Action onCancel)
+        public PatientFormVM(Action onSuccess, Action onCancel, Patient? patient = null)
         {
             Patient = patient;
-            OnSubmit = onSubmit;
+            OnSuccess= onSuccess;
             OnCancel = onCancel;
 
-            if (patient != null)
+            if (Patient != null)
             {
-                FormStreetId = patient.House.StreetId;
-                Form = new FormClass()
-                {
-                    Name = patient.Name,
-                    Surname = patient.Surname,
-                    Patronymic = patient.Patronymic,
-                    Gender = patient.Gender,
-                    BornAt = patient.BornAt,
-                    PhoneNumber = patient.PhoneNumber,
-                    MedicalPolicyNumber = patient.MedicalPolicyNumber,
-                    HouseId = patient.HouseId,
-                };
-
+                FormName = Patient.Name;
+                FormSurname = Patient.Surname;
+                FormPatronymic = Patient.Patronymic;
+                FormGender = Patient.Gender;
+                FormBornAt = Patient.BornAt;
+                FormPhoneNumber = Patient.PhoneNumber;
+                FormMedicalPolicyNumber = Patient.MedicalPolicyNumber;
+                FormStreetId = Patient.House.StreetId;
+                FormHouseId = Patient.HouseId;
                 WindowTitle = "Изменение пациента";
-            } else
-            {
-                WindowTitle = "Добавление пациента";
             }
 
             LoadStreets();
             LoadHouses();
         }
 
-        private string _windowTitle;
+        #region computed
+
+        private string _windowTitle = "Добавление пациента";
         public string WindowTitle
         {
             get => _windowTitle;
             set { _windowTitle = value; OnPropertyChanged(); }
         }
 
-        private List<Street> _streets;
-        public List<Street> Streets
+        #endregion
+
+        #region store
+
+        private ObservableCollection<Street> _streets;
+        public ObservableCollection<Street> Streets
         {
             get => _streets;
             set { _streets = value; OnPropertyChanged(); }
         }
 
-        private List<House> _houses;
-        public List<House> Houses 
+        private ObservableCollection<House> _houses;
+        public ObservableCollection<House> Houses 
         {
             get => _houses;
             set { _houses = value; OnPropertyChanged(); }
         }
 
-        private FormClass _form = new FormClass();
-        public FormClass Form
+        #endregion
+
+        #region form
+
+        private string _formName = "";
+        public string FormName
         {
-            get => _form;
-            set { _form = value; OnPropertyChanged(); }
+            get => _formName;
+            set { _formName = value; OnPropertyChanged(); }
+        }
+
+        private string _formSurname = "";
+        public string FormSurname 
+        {
+            get => _formSurname;
+            set { _formSurname = value; OnPropertyChanged(); }
+        }
+
+        private string _formPatronymic = "";
+        public string FormPatronymic
+        {
+            get => _formPatronymic;
+            set { _formPatronymic = value; OnPropertyChanged(); }
+        }
+
+        private PatientGender? _formGender;
+        public PatientGender? FormGender
+        {
+            get => _formGender;
+            set { _formGender = value; OnPropertyChanged(); }
+        }
+
+        private DateTime? _formBornAt;
+        public DateTime? FormBornAt
+        {
+            get => _formBornAt;
+            set { _formBornAt = value; OnPropertyChanged(); }
+        }
+
+        private string _formPhoneNumber = "";
+        public string FormPhoneNumber
+        {
+            get => _formPhoneNumber;
+            set { _formPhoneNumber = value; OnPropertyChanged(); }
+        }
+
+        private string _formMedicalPolicyNumber = "";
+        public string FormMedicalPolicyNumber
+        {
+            get => _formMedicalPolicyNumber;
+            set { _formMedicalPolicyNumber = value; OnPropertyChanged(); }
+        }
+
+        private int? _formHouseId;
+        public int? FormHouseId
+        {
+            get => _formHouseId;
+            set { _formHouseId = value; OnPropertyChanged(); }
         }
 
         private int? _formStreetId;
@@ -90,69 +130,57 @@ namespace Clinic.ViewModel.Main
             set { _formStreetId = value; OnPropertyChanged(); LoadHouses(); }
         }
 
+        #endregion
+
+        #region commands
+
+        private RelayCommand? _submit;
+        public RelayCommand Submit => _submit ??= new RelayCommand(() =>
+        {
+            var data = new Patient()
+            {
+                Name = FormName,
+                Surname = FormSurname,
+                Patronymic = FormPatronymic,
+                Gender = FormGender!.Value,
+                BornAt = FormBornAt!.Value.ToUniversalTime(),
+                PhoneNumber = FormPhoneNumber,
+                MedicalPolicyNumber = FormMedicalPolicyNumber,
+                HouseId = FormHouseId!.Value
+            };
+
+            if (Patient == null)
+            {
+                Repositories.Instance.Patients.Create(data);
+            }
+            else
+            {
+                data.Id = Patient.Id;
+                Repositories.Instance.Patients.Update(data);
+            }
+
+            Repositories.Instance.SaveChanges();
+            MessageBox.Show("Данные успешно сохранены");
+            OnSuccess();
+        }, () => !string.IsNullOrWhiteSpace(FormName) && !string.IsNullOrWhiteSpace(FormSurname) && FormGender != null &&
+                 FormBornAt != null && !string.IsNullOrWhiteSpace(FormPhoneNumber) && !string.IsNullOrWhiteSpace(FormMedicalPolicyNumber) &&
+                 FormHouseId != null);
+
+        private RelayCommand? _cancel;
+        public RelayCommand Cancel => _cancel ??= new RelayCommand(() => OnCancel());
+
+        #endregion
+
         private void LoadStreets()
         {
-            Streets = Repositories.Streets.FindAll();
+            Streets = new ObservableCollection<Street>(Repositories.Instance.Streets.FindAll());
         }
 
         private void LoadHouses()
         {
-            if (FormStreetId.HasValue)
+            if (FormStreetId != null)
             {
-                Houses = Repositories.Houses.FindAll(FormStreetId.Value);
-            }
-        }
-
-        private RelayCommand _submit;
-        public RelayCommand Submit
-        {
-            get
-            {
-                if (_submit == null)
-                {
-                    _submit = new RelayCommand(() =>
-                    {
-                        var data = new Patient()
-                        {
-                            Name = Form.Name,
-                            Surname = Form.Surname,
-                            Patronymic = Form.Patronymic,
-                            Gender = Form.Gender,
-                            BornAt = Form.BornAt.ToUniversalTime(),
-                            PhoneNumber = Form.PhoneNumber,
-                            MedicalPolicyNumber = Form.MedicalPolicyNumber,
-                            HouseId = Form.HouseId
-                        };
-
-                        if (Patient == null)
-                        {
-                            Repositories.Patients.Create(data);
-                        }
-                        else
-                        {
-                            data.Id = Patient.Id;
-                            Repositories.Patients.Update(data);
-                        }
-
-                        Repositories.SaveChanges();
-                        MessageBox.Show("Данные успешно сохранены");
-                        OnSubmit();
-                    });
-                }
-                return _submit;
-            }
-        }
-
-        private RelayCommand _cancel;
-        public RelayCommand Cancel
-        {
-            get
-            {
-                if (_cancel == null)
-                {
-                    _cancel = new RelayCommand(() => OnCancel());
-                }
-                return _cancel;
+                Houses = new ObservableCollection<House>(Repositories.Instance.Houses.FindAll(streetId: FormStreetId));
             }
         }
     }
