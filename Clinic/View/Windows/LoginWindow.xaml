@@ -12,31 +12,20 @@
         </Style>
     </Window.Resources>
 
-    <Border Background="{StaticResource White}" MaxWidth="400" Width="Auto" VerticalAlignment="Center" Padding="16" CornerRadius="16">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="1*" />
-                <RowDefinition Height="16" />
-                <RowDefinition Height="1*" />
-                <RowDefinition Height="16" />
-                <RowDefinition Height="1*" />
-                <RowDefinition Height="16" />
-                <RowDefinition Height="1*" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource Heading1}">Авторизация</TextBlock>
-            <StackPanel Grid.Row="2" Grid.Column="0">
-                <Label Style="{StaticResource FieldLabel}">Email</Label>
-                <TextBox Text="{Binding Email}" />
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+        <Border Background="{StaticResource White}" MaxWidth="400" Width="Auto" VerticalAlignment="Center" Padding="16" CornerRadius="16">
+            <StackPanel Margin="0,0,0,-16">
+                <TextBlock Margin="0,0,0,16" Style="{StaticResource Heading1}">Авторизация</TextBlock>
+                <StackPanel Margin="0,0,0,16">
+                    <Label Style="{StaticResource FieldLabel}">Email</Label>
+                    <TextBox Text="{Binding FormEmail, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+                <StackPanel Margin="0,0,0,16">
+                    <Label Style="{StaticResource FieldLabel}">Пароль</Label>
+                    <TextBox Text="{Binding FormPassword, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+                <Button Margin="0,0,0,16" Style="{StaticResource PrimaryButton}" Command="{Binding OnSubmit}">Войти</Button>
             </StackPanel>
-            <StackPanel Grid.Row="4" Grid.Column="0">
-                <Label Style="{StaticResource FieldLabel}">Пароль</Label>
-                <TextBox Text="{Binding Password}" />
-            </StackPanel>
-            <Button Grid.Row="6" Grid.Column="0" Style="{StaticResource PrimaryButton}"  Command="{Binding OnSubmit}">Войти</Button>
-        </Grid>
-    </Border>
+        </Border>
+    </ScrollViewer>
 </Window>

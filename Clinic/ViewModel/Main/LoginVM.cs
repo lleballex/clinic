@@ -1,4 +1,5 @@
-﻿using Clinic.ViewModel.Utils;
+﻿using Clinic.View.Windows;
+using Clinic.ViewModel.Utils;
 using DAL.Entities;
 using DAL.Repositories;
 using System.Windows;
@@ -7,51 +8,62 @@ namespace Clinic.ViewModel.Main
 {
     public class LoginVM : BaseVM
     {
-        private Repositories Repositories = Repositories.Instance;
+        private Action OnSuccess;
 
-        private Action<User> OnSuccess;
-
-        public LoginVM(Action<User> onSuccess)
+        public LoginVM(Action onSuccess)
         {
             OnSuccess = onSuccess;
         }
 
-        private string _email = "";
-        public string Email
+        #region form
+
+        private string _formEmail = "";
+        public string FormEmail
         {
-            get => _email;
-            set { _email = value; OnPropertyChanged("Email"); }
+            get => _formEmail;
+            set { _formEmail = value; OnPropertyChanged(); }
         }
         
-        private string _password = "";
-        public string Password
+        private string _formPassword = "";
+        public string FormPassword
         {
-            get => _password;
-            set { _password = value; OnPropertyChanged("Password"); }
+            get => _formPassword;
+            set { _formPassword = value; OnPropertyChanged(); }
         }
+
+        #endregion
+
+        #region commands
 
         private RelayCommand? _onSubmit;
-        public RelayCommand OnSubmit 
+        public RelayCommand OnSubmit => _onSubmit ??= new RelayCommand(() =>
         {
-            get
+            var user = Repositories.Instance.Users.FindByAuthData(FormEmail, FormPassword);
+
+            if (user == null)
             {
-                if (_onSubmit == null) {
-                    _onSubmit = new RelayCommand(() =>
-                    {
-                        var user = Repositories.Users.FindByAuthData(Email, Password);
+                MessageBox.Show("Почта или пароль не подходят");
+            } else
+            {
+                Store.Instance.CurUser = user;
 
-                        if (user == null)
-                        {
-                            MessageBox.Show("Почта или пароль не подходят");
-                        } else
-                        {
-                            OnSuccess(user);
-                        }
-                    });
+                switch (user.Role)
+                {
+                    case UserRole.Admin:
+                        (new AdminHomeWindow()).Show();
+                        break;
+                    case UserRole.Registrar:
+                        (new RegistrarHomeWindow()).Show();
+                        break;
+                    case UserRole.Doctor:
+                        (new DoctorHomeWindow()).Show();
+                        break;
                 }
-                return _onSubmit;
-            }
-        }
 
+                OnSuccess();
+            }
+        }, () => !string.IsNullOrWhiteSpace(FormEmail) && !string.IsNullOrWhiteSpace(FormPassword));
+
+        #endregion
     }
 }

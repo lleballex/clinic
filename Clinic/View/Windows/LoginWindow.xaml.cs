@@ -10,25 +10,7 @@ namespace Clinic.View.Windows
         {
             InitializeComponent();
 
-            DataContext = new LoginVM(OnSuccess);
-        }
-
-        private void OnSuccess(User user)
-        {
-            switch (user.Role)
-            {
-                case UserRole.Admin:
-                    (new AdminHomeWindow()).Show();
-                    break;
-                case UserRole.Registrar:
-                    (new RegistrarHomeWindow()).Show();
-                    break;
-                case UserRole.Doctor:
-                    (new DoctorHomeWindow()).Show();
-                    break;
-            }
-
-            Close();
+            DataContext = new LoginVM(Close);
         }
     }
 }
