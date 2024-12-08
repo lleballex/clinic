@@ -4,69 +4,63 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Clinic.View.Windows"
+        xmlns:utils="clr-namespace:Clinic.View.Utils"
         mc:Ignorable="d"
-        Style="{StaticResource Window}" Width="650" Height="Auto" SizeToContent="Height">
+        Style="{StaticResource Window}" Width="750" Height="Auto" SizeToContent="Height">
     <Window.Resources>
+        <utils:IsNotVisibleConverter x:Key="IsNotVisibleConverter" />
+
         <Style x:Key="FieldLabel" TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
             <Setter Property="Margin" Value="0,0,0,8" />
         </Style>
     </Window.Resources>
 
-    <StackPanel Margin="16,16,16,0">
-        <StackPanel Margin="0,0,0,16">
-            <TextBlock Style="{StaticResource Heading1}" Margin="0,0,0,4">Внесение результатов приема</TextBlock>
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="1*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="{Binding Computed.FullName}" />
-                <TextBlock Grid.Column="2" Text="{Binding Computed.Datetime}" />
-            </Grid>
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="16,16,16,0">
+            <TextBlock Style="{StaticResource Heading1}" Margin="0,0,0,16" Text="{Binding WindowTitle}" />
+
+            <StackPanel Margin="0,0,0,16">
+                <Label Style="{StaticResource FieldLabel}">Диагноз</Label>
+                <ComboBox ItemsSource="{Binding Diagnosises}" DisplayMemberPath="Name" SelectedValuePath="Id" SelectedValue="{Binding FormDiagnosisId}" />
+            </StackPanel>
+
+            <StackPanel Margin="0,0,0,16">
+                <Label Style="{StaticResource FieldLabel}">Описание диагноза</Label>
+                <TextBox Text="{Binding FormDiagnosisDescription}" />
+            </StackPanel>
+
+            <StackPanel Margin="0,0,0,16">
+                <Label Style="{StaticResource FieldLabel}">Рекомендации</Label>
+                <TextBox Text="{Binding FormRecommendations, UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
+
+            <TextBlock Visibility="{Binding IsProcedure, Converter={StaticResource IsNotVisibleConverter}}" Style="{StaticResource Heading4}" Margin="0,0,0,16">Процедуры</TextBlock>
+
+            <ItemsControl ItemsSource="{Binding FormProcedures}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="0,0,0,16">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="16" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <Label Style="{StaticResource FieldLabel}">Вид процедуры</Label>
+                                <ComboBox Grid.Column="0" SelectedValue="{Binding TypeId}" ItemsSource="{Binding DataContext.ProcedureTypes, RelativeSource={RelativeSource AncestorType=ItemsControl}}" SelectedValuePath="Id" DisplayMemberPath="Name" />
+                            </StackPanel>
+                            <Button Grid.Column="2" Style="{StaticResource DangerButton}" VerticalAlignment="Bottom" Command="{Binding DataContext.RemoveProcedure, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}">Отменить</Button>
+                        </Grid>
+                    </DataTemplate>        
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <Button Visibility="{Binding IsProcedure, Converter={StaticResource IsNotVisibleConverter}}" Margin="0,0,0,16" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Left" Command="{Binding AddProcedure}">Назначить новую процедуру</Button>
+
+            <StackPanel Margin="0,0,0,16" Orientation="Horizontal">
+                <Button Style="{StaticResource PrimaryButton}" Command="{Binding Submit}">Сохранить</Button>
+                <Button Style="{StaticResource SecondaryButton}" Margin="16,0,0,0" Command="{Binding Cancel}" >Отменить</Button>
+            </StackPanel>
         </StackPanel>
-
-        <StackPanel Margin="0,0,0,16">
-            <Label Style="{StaticResource FieldLabel}">Диагноз</Label>
-            <ComboBox ItemsSource="{Binding Diagnosises}" DisplayMemberPath="Name" SelectedValuePath="Id" SelectedValue="{Binding Form.Diagnosis}" />
-        </StackPanel>
-
-        <StackPanel Margin="0,0,0,16">
-            <Label Style="{StaticResource FieldLabel}">Описание диагноза</Label>
-            <TextBox Text="{Binding Form.DiagnosisDescription}" />
-        </StackPanel>
-
-        <StackPanel Margin="0,0,0,16">
-            <Label Style="{StaticResource FieldLabel}">Рекомендации</Label>
-            <TextBox Text="{Binding Form.Recommendations}"/>
-        </StackPanel>
-
-        <TextBlock Style="{StaticResource Heading4}" Margin="0,0,0,16">Процедуры</TextBlock>
-
-        <ItemsControl ItemsSource="{Binding SelectedProcedures}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Grid Margin="0,0,0,16">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1*" />
-                            <ColumnDefinition Width="16" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <StackPanel Grid.Column="0">
-                            <Label Style="{StaticResource FieldLabel}">Вид процедуры</Label>
-                            <ComboBox Grid.Column="0" SelectedValue="{Binding TypeId}" ItemsSource="{Binding DataContext.ProcedureTypes, RelativeSource={RelativeSource AncestorType=ItemsControl}}" SelectedValuePath="Id" DisplayMemberPath="Name" />
-                        </StackPanel>
-                        <Button Grid.Column="2" Style="{StaticResource DangerButton}" VerticalAlignment="Bottom" Command="{Binding DataContext.RemoveProcedure, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}">Отменить</Button>
-                    </Grid>
-                </DataTemplate>        
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-
-        <Button Margin="0,0,0,16" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Left" Command="{Binding AddProcedure}">Назначить новую процедуру</Button>
-
-        <StackPanel Margin="0,0,0,16" Orientation="Horizontal">
-            <Button Style="{StaticResource SecondaryButton}" Margin="0,0,16,0" Command="{Binding Cancel}" >Отменить</Button>
-            <Button Style="{StaticResource PrimaryButton}" Command="{Binding Submit}">Внести</Button>
-        </StackPanel>
-    </StackPanel>
+    </ScrollViewer>
 </Window>

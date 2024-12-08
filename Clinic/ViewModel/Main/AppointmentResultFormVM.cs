@@ -1,7 +1,7 @@
-﻿using Clinic.ViewModel.Utils;
+﻿using Clinic.Model;
+using Clinic.ViewModel.Utils;
 using DAL.Entities;
 using DAL.Repositories;
-using Npgsql;
 using System.Collections.ObjectModel;
 using System.Windows;
 
@@ -9,26 +9,7 @@ namespace Clinic.ViewModel.Main
 {
     public class AppointmentResultFormVM : BaseVM
     {
-        public class ComputedClass
-        {
-            public string FullName { get; set; } = "";
-            public string Datetime { get; set; } = "";
-        }
-
-        public class FormClass
-        {
-            public int Diagnosis { get; set; }
-            public string DiagnosisDescription { get; set; } = "";
-            public string Recommendations { get; set; } = "";
-        }
-
-        public class SelectedProcedure
-        {
-            public int TypeId { get; set; }
-        }
-
-        private Repositories Repositories = Repositories.Instance;
-
+        public Appointment Appointment;
         private Action OnSuccess;
         private Action OnCancel;
 
@@ -38,9 +19,36 @@ namespace Clinic.ViewModel.Main
             OnSuccess = onSuccess;
             OnCancel = onCancel;
 
-            Diagnosises = Repositories.Diagnosises.FindAll();
-            ProcedureTypes = new ObservableCollection<ProcedureType>(Repositories.ProcedureTypes.FindAll());
+            if (Appointment.ProcedureId != null)
+            {
+                WindowTitle = "Внесение результатов процедуры";
+            }
+
+            IsProcedure = Appointment.ProcedureId != null;
+
+            LoadDiagnosises();
+            LoadProcedureTypes();
         }
+
+        #region computed
+
+        private string _windowTitle = "Внесение результатов приема";
+        public string WindowTitle
+        {
+            get => _windowTitle;
+            set { _windowTitle = value; OnPropertyChanged(); }
+        }
+
+        private bool _isProcedure;
+        public bool IsProcedure
+        {
+            get => _isProcedure;
+            set { _isProcedure = value; OnPropertyChanged(); }
+        }
+
+        #endregion
+
+        #region store
 
         private ObservableCollection<ProcedureType> _procedureTypes = [];
         public ObservableCollection<ProcedureType> ProcedureTypes
@@ -49,119 +57,107 @@ namespace Clinic.ViewModel.Main
             set { _procedureTypes = value; OnPropertyChanged(); }
         }
 
-        private Appointment _appointment;
-        public Appointment Appointment
-        {
-            get => _appointment;
-            set { _appointment = value; OnPropertyChanged(); UpdateComputed(); }
-        }
-
-        private List<Diagnosis> _diagnosises;
-        public List<Diagnosis> Diagnosises
+        private ObservableCollection<Diagnosis> _diagnosises = [];
+        public ObservableCollection<Diagnosis> Diagnosises
         {
             get => _diagnosises;
             set { _diagnosises = value; OnPropertyChanged(); }
         }
 
-        private ComputedClass _computed;
-        public ComputedClass Computed
+        #endregion
+
+        #region form
+
+        private int? _formDiagnosisId;
+        public int? FormDiagnosisId
         {
-            get => _computed;
-            set { _computed = value; OnPropertyChanged(); }
+            get => _formDiagnosisId;
+            set { _formDiagnosisId = value; OnPropertyChanged(); }
         }
 
-        private FormClass _form = new FormClass();
-        public FormClass Form
+        private string _formDiagnosisDescription = "";
+        public string FormDiagnosisDescription
         {
-            get => _form;
-            set { _form = value; OnPropertyChanged(); }
+            get => _formDiagnosisDescription;
+            set { _formDiagnosisDescription = value; OnPropertyChanged(); }
         }
 
-        private ObservableCollection<SelectedProcedure> _selectedProcedures = [];
-        public ObservableCollection<SelectedProcedure> SelectedProcedures
+        private string _formRecommendations = "";
+        public string FormRecommendations
         {
-            get => _selectedProcedures;
-            set { _selectedProcedures = value; OnPropertyChanged(); }
+            get => _formRecommendations;
+            set { _formRecommendations = value; OnPropertyChanged(); }
         }
 
-        private void UpdateComputed()
+        private ObservableCollection<AppointmentProcedureFormModel> _formProcedures = [];
+        public ObservableCollection<AppointmentProcedureFormModel> FormProcedures
         {
-            var computed = new ComputedClass();
-
-            computed.FullName = $"{Appointment.Patient.Surname} {Appointment.Patient.Name} {Appointment.Patient.Patronymic}";
-
-            var localDatetime = TimeZoneInfo.ConvertTimeFromUtc(Appointment.Datetime, TimeZoneInfo.Local);
-            computed.Datetime = localDatetime.ToString("dd.MM.yyyy") + " " + localDatetime.ToString("HH:mm") + " - " + (localDatetime.Add(Appointment.Doctor.AppointmentDuration.ToTimeSpan())).ToString("HH:mm");
-
-            Computed = computed;
+            get => _formProcedures;
+            set { _formProcedures = value; OnPropertyChanged(); }
         }
 
-        private RelayCommand _submit;
-        public RelayCommand Submit
+        #endregion
+
+        #region commands
+
+        private RelayCommand? _submit;
+        public RelayCommand Submit => _submit ??= new RelayCommand(() =>
         {
-            get
+            Repositories.Instance.UseTransaction(() =>
             {
-                if (_submit == null)
+                var appointmentResultData = new AppointmentResult()
                 {
-                    _submit = new RelayCommand(() =>
+                    AppointmentId = Appointment.Id,
+                    DiagnosisId = FormDiagnosisId!.Value,
+                    DiagnosisDescription = FormDiagnosisDescription,
+                    Recommendations = FormRecommendations
+                };
+                Repositories.Instance.AppointmentsResults.Create(appointmentResultData);
+                Appointment.Status = AppointmentStatus.Finished;
+                Repositories.Instance.Appointments.Update(Appointment);
+                Repositories.Instance.SaveChanges();
+                foreach (var procedure in FormProcedures)
+                {
+                    Repositories.Instance.Procedures.Create(new Procedure()
                     {
-                        Repositories.UseTransaction(() =>
-                        {
-                            var appointmentResult = new AppointmentResult()
-                            {
-                                AppointmentId = Appointment.Id,
-                                DiagnosisId = Form.Diagnosis,
-                                DiagnosisDescription = Form.DiagnosisDescription,
-                                Recommendations = Form.Recommendations
-                            };
-                            Repositories.AppointmentsResults.Create(appointmentResult);
-                            Appointment.Status = AppointmentStatus.Finished;
-                            Repositories.Appointments.Update(Appointment);
-                            Repositories.SaveChanges();
-                            foreach (var procedure in SelectedProcedures)
-                            {
-                                Repositories.Procedures.Create(new Procedure()
-                                {
-                                    AssignedAppointmentId = Appointment.Id,
-                                    TypeId = procedure.TypeId,
-                                });
-                            }
-                            Repositories.SaveChanges();
-                        });
-                        MessageBox.Show("Данные успешно сохранены");
-                        OnSuccess();
+                        AssignedAppointmentId = Appointment.Id,
+                        TypeId = procedure.TypeId!.Value,
                     });
                 }
-                return _submit;
-            }
-        }
+                Repositories.Instance.SaveChanges();
+            });
+            MessageBox.Show("Данные успешно сохранены");
+            OnSuccess();
+        }, () => FormDiagnosisId != null && FormProcedures.All(i => i.TypeId != null));
 
-        private RelayCommand _cancel;
-        public RelayCommand Cancel
-        {
-            get
-            {
-                if (_cancel == null)
-                {
-                    _cancel = new RelayCommand(() => OnCancel());
-                }
-                return _cancel;
-            }
-        }
+        private RelayCommand? _cancel;
+        public RelayCommand Cancel => _cancel ??= new RelayCommand(OnCancel);
 
-        private RelayCommand _addProcedure;
+        private RelayCommand? _addProcedure;
         public RelayCommand AddProcedure => _addProcedure ??= new RelayCommand(() =>
         {
-            SelectedProcedures.Add(new SelectedProcedure());
+            FormProcedures.Add(new AppointmentProcedureFormModel());
         });
 
-        private RelayCommand _removeProcedure;
+        private RelayCommand? _removeProcedure;
         public RelayCommand RemoveProcedure => _removeProcedure ??= new RelayCommand((obj) =>
         {
-            if (obj is SelectedProcedure procedure)
+            if (obj is AppointmentProcedureFormModel procedure)
             {
-                SelectedProcedures.Remove(procedure);
+                FormProcedures.Remove(procedure);
             }
         });
+
+        #endregion
+
+        private void LoadDiagnosises()
+        {
+            Diagnosises = new ObservableCollection<Diagnosis>(Repositories.Instance.Diagnosises.FindAll());
+        }
+
+        private void LoadProcedureTypes()
+        {
+            ProcedureTypes = new ObservableCollection<ProcedureType>(Repositories.Instance.ProcedureTypes.FindAll());
+        }
     }
 }
