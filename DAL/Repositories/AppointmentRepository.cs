@@ -12,7 +12,7 @@ namespace DAL.Repositories
             Context = context;
         }
 
-        public List<Appointment> FindAll(int? patientId = null, int? doctorId = null, DateOnly? date = null)
+        public List<Appointment> FindAll(int? patientId = null, int? doctorId = null, DateOnly? date = null, AppointmentStatus? status = null)
         {
             return Context.Appointments
                 .Include(i => i.Result)
@@ -24,7 +24,9 @@ namespace DAL.Repositories
                 .ThenInclude(i => i.Type)
                 .Include(i => i.AssignedProcedures)
                 .ThenInclude(i => i.Appointment)
-                .Where(i => (patientId == null || i.PatientId == patientId) && (doctorId == null || i.DoctorId == doctorId) && (date == null || DateOnly.FromDateTime(i.Datetime.ToLocalTime()) == date))
+                .Where(i => (patientId == null || i.PatientId == patientId) && (doctorId == null || i.DoctorId == doctorId) &&
+                            (date == null || DateOnly.FromDateTime(i.Datetime.ToLocalTime()) == date) &&
+                            (status == null || i.Status == status))
                 .OrderByDescending(i => i.Datetime)
                 .ToList();
         }

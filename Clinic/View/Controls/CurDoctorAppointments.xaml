@@ -4,12 +4,21 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Clinic.View.Controls"
+             xmlns:utils="clr-namespace:Clinic.View.Utils"
              mc:Ignorable="d" 
              d:Style="{StaticResource ControlDesignStyle}">
+    <UserControl.Resources>
+        <utils:IsNotVisibleConverter x:Key="IsNotVisibleConverter" />
+    </UserControl.Resources>
+
     <StackPanel Margin="0,0,0,-16">
         <TextBlock Margin="0,0,0,16" Style="{StaticResource Heading1}">Мои приемы</TextBlock>
 
         <DatePicker Margin="0,0,0,16" SelectedDate="{Binding FormDate}" />
+
+        <TextBlock Visibility="{Binding AppointmentsExist, Converter={StaticResource IsNotVisibleConverter}}">
+            На этот день запланированных приемов нет
+        </TextBlock>
 
         <ItemsControl ItemsSource="{Binding Appointments}">
             <ItemsControl.ItemTemplate>
