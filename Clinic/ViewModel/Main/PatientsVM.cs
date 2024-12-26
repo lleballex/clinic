@@ -56,11 +56,39 @@ namespace Clinic.ViewModel.Main
 
         // chmi
 
+        public void OnLoad()
+        {
+            ProgressBarBackground = Store.Instance.BarSecondaryBackground;
+            ProgressBarForeground = Store.Instance.BarPrimaryBackground;
+            ProgressBarBorder = Store.Instance.BarBorder;
+        }
+
         private double _scrollProgress;
         public double ScrollProgress
         {
             get => _scrollProgress;
             set { _scrollProgress = value; OnPropertyChanged(); }
+        }
+
+        private string _progressBarBackground;
+        public string ProgressBarBackground
+        {
+            get => _progressBarBackground;
+            set { _progressBarBackground = value; OnPropertyChanged(); }
+        }
+
+        private string _progressBarForeground;
+        public string ProgressBarForeground
+        {
+            get => _progressBarForeground;
+            set { _progressBarForeground = value; OnPropertyChanged(); }
+        }
+
+        private string _progressBarBorder;
+        public string ProgressBarBorder
+        {
+            get => _progressBarBorder;
+            set { _progressBarBorder = value; OnPropertyChanged(); }
         }
     }
 }

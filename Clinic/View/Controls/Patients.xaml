@@ -4,10 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Clinic.View.Controls"
+             Loaded="OnLoad"
              mc:Ignorable="d" 
              d:Style="{StaticResource ControlDesignStyle}">
     <StackPanel>
-        <ProgressBar Value="{Binding ScrollProgress}" Height="10" Margin="0,0,0,16" />
+        <ProgressBar Foreground="{Binding ProgressBarForeground}" BorderBrush="{Binding ProgressBarBorder}" Background="{Binding ProgressBarBackground}" Value="{Binding ScrollProgress}" Height="10" Margin="0,0,0,16" />
 
         <ScrollViewer Padding="0,0,16,0" Height="600" ScrollChanged="ScrollViewer_ScrollChanged" > 
         <Grid>
